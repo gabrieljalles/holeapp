@@ -1,0 +1,32 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SpotHole{
+  id String @id @default(uuid()) 
+  priority String?
+  size String?
+  trafficIntensity String?
+  status String
+  createdBy String?
+  fixedBy String?
+  latitude Float
+  longitude Float
+  zone String
+  district String?
+  cep String?
+  address String?
+  number String?
+  observation String?
+  fixedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imgBeforeWork String?
+  imgAfterWork String?
+}
