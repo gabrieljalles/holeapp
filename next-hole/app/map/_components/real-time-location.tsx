@@ -28,7 +28,7 @@ const customIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-const MapClickHandler = ({onMapClick, isMarking}: any) => {
+const MapClickHandler = ({ onMapClick, isMarking }: any) => {
   useMapEvents({
     click: (e) => {
       if (isMarking) {
@@ -38,12 +38,15 @@ const MapClickHandler = ({onMapClick, isMarking}: any) => {
     },
   });
   return null;
-}
+};
 
-const RealtimeLocation = ({isMarking, onMapClick}: any) => {
-  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
-  const [clickedLocation, setClickedLocation] = useState<[number, number]| null>(null);
-  
+const RealtimeLocation = ({ isMarking, onMapClick }: any) => {
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(
+    null
+  );
+  const [clickedLocation, setClickedLocation] = useState<
+    [number, number] | null
+  >(null);
 
   //Obter localização do usuário
   useEffect(() => {
@@ -76,7 +79,7 @@ const RealtimeLocation = ({isMarking, onMapClick}: any) => {
     <MapContainer
       center={userPosition}
       zoom={14}
-      style={{ height: "100vh", width: "100%" }}
+      style={{ height: "100vh", width: "100%", zIndex: "0" }}
       key="realtime-map"
     >
       <TileLayer
@@ -93,7 +96,6 @@ const RealtimeLocation = ({isMarking, onMapClick}: any) => {
       )}
 
       <MapClickHandler onMapClick={onMapClick} isMarking={isMarking} />
-      
     </MapContainer>
   );
 };

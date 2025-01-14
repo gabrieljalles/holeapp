@@ -20,8 +20,8 @@ export class SpotHoleController {
       status: string;
       createdBy: string;
       fixedBy: string;
-      latitude: number;
-      longitude: number;
+      lat: number;
+      lng: number;
       zone: string;
       district: string;
       cep: string;

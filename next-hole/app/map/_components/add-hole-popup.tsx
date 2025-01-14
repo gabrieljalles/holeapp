@@ -1,23 +1,35 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-interface AddHolePopupProps { 
-  isVisible: boolean;
-  onClose: () => void;
-  onSubmit: (data: {
-    imgBeforeWork: File | null;
-    zone: string;
-    observation: string;
-  }) => void;
+interface PopupFormData {
+  lat: number;
+  lng: number;
+  imgBeforeWork: File | null;
+  zone: string;
+  observation: string;
+  status: string;
 }
 
-const AddHolePopup = ({isVisible, onClose, onSubmit}: AddHolePopupProps) => {
+interface AddHolePopupProps {
+  isVisible: boolean;
+  onClose: () => void;
+  onSubmit: (data: PopupFormData) => void;
+}
+
+const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
   const [formData, setFormData] = useState({
+    lat: 0.0,
+    lng: 0.0,
     imgBeforeWork: null as File | null,
     zone: "",
     observation: "",
+    status: "Em aberto",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -29,18 +41,22 @@ const AddHolePopup = ({isVisible, onClose, onSubmit}: AddHolePopupProps) => {
   };
 
   const handleFormSubmit = () => {
-    onSubmit(formData); // Envia os dados para a função pai
-    onClose(); // Fecha o popup
+    onSubmit(formData);
+    onClose();
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex z-[1000] items-center justify-center">
       <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full">
-        <h2 className="text-xl font-bold mb-4">Adicionar informações do buraco</h2>
+        <h2 className="text-xl font-bold mb-4">
+          Adicionar informações do buraco
+        </h2>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Foto do buraco:</label>
+          <label className="block text-sm font-medium mb-1">
+            Foto do buraco:
+          </label>
           <input
             type="file"
             name="imgBeforeWork"
@@ -81,7 +97,7 @@ const AddHolePopup = ({isVisible, onClose, onSubmit}: AddHolePopupProps) => {
           </button>
           <button
             onClick={handleFormSubmit}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
+            className="px-4 py-2 bg-green-400 text-white rounded"
           >
             Salvar
           </button>

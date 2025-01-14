@@ -16,8 +16,8 @@ model SpotHole{
   status String
   createdBy String?
   fixedBy String?
-  latitude Float
-  longitude Float
+  lat Float
+  lng Float
   zone String
   district String?
   cep String?
