@@ -48,16 +48,18 @@ const MapPage = () => {
   const handlePopupSubmit = async (data: HoleDataProps) => {
     const formData = new FormData();
 
-    console.log("holedata", holeData);
-    console.log("data", data);
-
-    formData.append("lat", holeData.lng.toString());
-    formData.append(" lng", holeData.lng.toString());
+    formData.append("lat", holeData.lat.toString());
+    formData.append("lng", holeData.lng.toString());
     formData.append("status", data.status);
     formData.append("zone", data.zone);
     formData.append("observation", data.observation);
     if (data.imgBeforeWork) {
       formData.append("imgBeforeWork", data.imgBeforeWork);
+    }
+
+    console.log("Dados no FormData:");
+    for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
     }
 
     try {

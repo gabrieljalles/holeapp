@@ -18,6 +18,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error in API route:", error);
     return NextResponse.json(
+      
       { error: "Something went wrong" },
       { status: 500 }
     );

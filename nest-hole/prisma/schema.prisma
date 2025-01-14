@@ -27,6 +27,6 @@ model SpotHole{
   fixedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  imgBeforeWork String?
-  imgAfterWork String?
+  imgBeforeWorkPath String?
+  imgAfterWorkPath String?
 }

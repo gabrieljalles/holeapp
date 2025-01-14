@@ -26,8 +26,8 @@ export class SpotHoleService {
     number: string;
     observation: string;
     fixedAt: string | Date;
-    imgBeforeWork: string;
-    imgAfterWork: string;
+    imgBeforeWorkPath: string;
+    imgAfterWorkPath: string;
   }) {
     return this.prisma.spotHole.create({ data });
   }

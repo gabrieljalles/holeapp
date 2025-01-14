@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  UploadedFile, 
+  UseInterceptors 
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/shared/multer.config';
 import { SpotHoleService } from './spothole.service';
 
-@Controller('spotholes')
+@Controller('spothole')
 export class SpotHoleController {
   constructor(private readonly spotHoleService: SpotHoleService) {}
 
@@ -11,6 +20,7 @@ export class SpotHoleController {
   }
 
   @Post()
+  @UseInterceptors(FileInterceptor('imgBeforeWork', multerOptions))
   async create(
     @Body()
     body: {
@@ -29,10 +39,13 @@ export class SpotHoleController {
       number: string;
       observation: string;
       fixedAt: string | Date;
-      imgBeforeWork: string;
-      imgAfterWork: string;
+      imgBeforeWorkPath: string;
+      imgAfterWorkPath: string;
     },
+    @UploadedFile() imgBeforeWork: Express.Multer.File,
   ) {
-    return this.spotHoleService.create(body);
+    return this.spotHoleService.create({
+      ...body, 
+      imgBeforeWorkPath: imgBeforeWork.path,})
   }
 }
