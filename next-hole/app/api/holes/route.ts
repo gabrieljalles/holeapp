@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
 
-    const response = await fetch("http://localhost:3000/spotholes", {
+    const response = await fetch("http://localhost:3001/spotholes", {
       method: "POST",
       body: formData,
     });
@@ -18,7 +18,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error in API route:", error);
     return NextResponse.json(
-      
       { error: "Something went wrong" },
       { status: 500 }
     );

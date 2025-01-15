@@ -1,34 +1,73 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import * as L from 'leaflet';
+import { SpotHoleRepository } from './spothole.repository';
+import { Prisma, SpotHole } from '@prisma/client';
+import axios from 'axios';
 
 @Injectable()
 export class SpotHoleService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly spotHoleRepository: SpotHoleRepository) {}
 
-  async findAll() {
-    return this.prisma.spotHole.findMany();
+  // <<<<
+  async findAll(): Promise<SpotHole[]> {
+    return this.spotHoleRepository.findAll();
   }
 
-  //Crie um spot
+  // >>>>
   async create(data: {
-    priority: string;
-    size: string;
-    trafficIntensity: string;
-    status: string;
-    createdBy: string;
-    fixedBy: string;
     lat: number;
     lng: number;
-    zone: string;
-    district: string;
-    cep: string;
-    address: string;
-    number: string;
-    observation: string;
-    fixedAt: string | Date;
-    imgBeforeWorkPath: string;
-    imgAfterWorkPath: string;
+    imgBeforeWork: Express.Multer.File;
   }) {
-    return this.prisma.spotHole.create({ data });
+    const { lat, lng, imgBeforeWork } = data;
+
+    const addressData = await this.getAddressFromLatLng(lat, lng);
+
+    const newSpotHole: Prisma.SpotHoleCreateInput = {
+      priority: '',
+      size: '',
+      trafficIntensity: '',
+      status: 'Em aberto',
+      createdBy: 'Sistema',
+      fixedBy: '',
+      lat: Number(lat),
+      lng: Number(lng),
+      zone: '',
+      district: '',
+      cep: '',
+      address: '',
+      number: '',
+
+      imgBeforeWorkPath: imgBeforeWork.path || null,
+      imgAfterWorkPath: null,
+      ...addressData,
+    };
+
+    return this.spotHoleRepository.create(newSpotHole);
+  }
+
+  private async getAddressFromLatLng(
+    lat: number,
+    lng: number,
+  ): Promise<Partial<Prisma.SpotHoleCreateInput>> {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`;
+      const response = await axios.get(url);
+      const address = response.data.address || {};
+
+      return {
+        address: address.road || null,
+        district: address.suburb || null,
+        cep: address.postcode || null,
+        zone: address.city_district || null,
+        number: address.house_number || null,
+      };
+    } catch (error) {
+      console.error('Erro ao buscar endereço:', error);
+      throw new Error(
+        'Não foi possível buscar o endereço. Verifique a conexão.',
+      );
+    }
   }
 }

@@ -1,10 +1,12 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  UploadedFile, 
-  UseInterceptors 
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UploadedFile,
+  UseInterceptors,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/shared/multer.config';
@@ -16,7 +18,14 @@ export class SpotHoleController {
 
   @Get()
   async findAll() {
-    return this.spotHoleService.findAll();
+    try {
+      return this.spotHoleService.findAll();
+    } catch (error) {
+      throw new HttpException(
+        'Erro ao buscar os registros',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Post()
@@ -24,28 +33,27 @@ export class SpotHoleController {
   async create(
     @Body()
     body: {
-      priority: string;
-      size: string;
-      trafficIntensity: string;
-      status: string;
-      createdBy: string;
-      fixedBy: string;
       lat: number;
       lng: number;
-      zone: string;
-      district: string;
-      cep: string;
-      address: string;
-      number: string;
-      observation: string;
-      fixedAt: string | Date;
-      imgBeforeWorkPath: string;
-      imgAfterWorkPath: string;
     },
     @UploadedFile() imgBeforeWork: Express.Multer.File,
   ) {
-    return this.spotHoleService.create({
-      ...body, 
-      imgBeforeWorkPath: imgBeforeWork.path,})
+    const { lat, lng } = body;
+    if (!lat || !lng || !imgBeforeWork) {
+      throw new HttpException(
+        'Latitude, longitude e a imagem são obrigatórios',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      return await this.spotHoleService.create({ lat, lng, imgBeforeWork });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        'Erro ao criar o registro.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
