@@ -39,6 +39,7 @@ export class SpotHoleController {
     @UploadedFile() imgBeforeWork: Express.Multer.File,
   ) {
     const { lat, lng } = body;
+    
     if (!lat || !lng || !imgBeforeWork) {
       throw new HttpException(
         'Latitude, longitude e a imagem são obrigatórios',
