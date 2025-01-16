@@ -1,0 +1,46 @@
+"use client";
+import dynamic from "next/dynamic";
+import React from "react";
+
+const Circle = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Circle),
+  { ssr: false }
+);
+
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+interface Spot {
+  id: string;
+  lat: number;
+  lng: number;
+}
+
+interface HoleMapProps {
+  spot: Spot;
+}
+
+const HoleMap = ({ spot }: HoleMapProps) => {
+  return (
+    <React.Fragment key={spot.id}>
+      <Circle
+        center={[spot.lat, spot.lng]}
+        radius={20}
+        color="red"
+        fillColor="red"
+        fillOpacity={0.3}
+      />
+      <Circle
+        center={[spot.lat, spot.lng]}
+        radius={0.5}
+        color="black"
+        fillColor="black"
+        fillOpacity={1}
+      />
+    </React.Fragment>
+  );
+};
+
+export default HoleMap;

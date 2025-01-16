@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import L from "leaflet";
 import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
+import HoleMap from "./hole-map";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -41,12 +42,34 @@ const MapClickHandler = ({ onMapClick, isMarking }: any) => {
 };
 
 const RealtimeLocation = ({ isMarking, onMapClick }: any) => {
+  //Localização atual do usuário:
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
+  const [spotholes, setSpotholes] = useState<any[]>([]);
+
+  //Clique realizado:
   const [clickedLocation, setClickedLocation] = useState<
     [number, number] | null
   >(null);
+
+  useEffect(() => {
+    const fetchSpotholes = async () => {
+      try {
+        const response = await fetch("/api/holes");
+
+        if (!response.ok) {
+          throw new Error("Erro ao buscar spotholes");
+        }
+
+        const data = await response.json();
+        setSpotholes(data);
+      } catch (error) {
+        console.error("Erro ao buscar buracos no banco de dados:", error);
+      }
+    };
+    fetchSpotholes();
+  }, []);
 
   //Obter localização do usuário
   useEffect(() => {
@@ -87,13 +110,16 @@ const RealtimeLocation = ({ isMarking, onMapClick }: any) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {userPosition && (
-        <Marker position={userPosition} icon={customIcon}></Marker>
-      )}
+      {userPosition && <Marker position={userPosition} icon={customIcon} />}
 
       {clickedLocation && (
-        <Marker position={clickedLocation} icon={customIcon}></Marker>
+        <Marker position={clickedLocation} icon={customIcon} />
       )}
+
+      {spotholes.map((spot) => {
+        if (!spot.lat || !spot.lng) return null;
+        return <HoleMap spot={spot} key={spot.id} />;
+      })}
 
       <MapClickHandler onMapClick={onMapClick} isMarking={isMarking} />
     </MapContainer>
