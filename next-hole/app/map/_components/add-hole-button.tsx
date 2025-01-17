@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { FaClipboard, FaCog, FaPlus } from "react-icons/fa";
 
 interface AddHoleButtonProps {
@@ -6,6 +7,7 @@ interface AddHoleButtonProps {
 }
 
 const AddHoleButton = ({onActivate}: AddHoleButtonProps) => {
+  const { toast } = useToast();
   return (
     <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-white shadow-xl rounded-3xl max-w-[350px] min-w-[280px] p-2 h-16 z-[1000] flex gap-2 items-center justify-between">
       <Button

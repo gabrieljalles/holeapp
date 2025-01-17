@@ -39,6 +39,7 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
 
   const handleFormSubmit =() => {
     onSubmit(formData);
+    setFormData({imgBeforeWork: null, observation:'', lat:0, lng:0})
     onClose();
   };
 
