@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import React, { useState } from "react";
 
 interface PopupFormData {
@@ -39,6 +40,11 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
 
   const handleFormSubmit =() => {
     onSubmit(formData);
+    toast({
+      variant:"destructive",
+      title: "Sucesso!",
+      description: "O buraco foi adicionado com sucesso!",
+    });
     setFormData({imgBeforeWork: null, observation:'', lat:0, lng:0})
     onClose();
   };
