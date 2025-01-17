@@ -35,10 +35,11 @@ export class SpotHoleController {
     body: {
       lat: number;
       lng: number;
+      observation: string;
     },
     @UploadedFile() imgBeforeWork: Express.Multer.File,
   ) {
-    const { lat, lng } = body;
+    const { lat, lng, observation } = body;
     
     if (!lat || !lng || !imgBeforeWork) {
       throw new HttpException(
@@ -48,7 +49,7 @@ export class SpotHoleController {
     }
 
     try {
-      return await this.spotHoleService.create({ lat, lng, imgBeforeWork });
+      return await this.spotHoleService.create({ lat, lng, imgBeforeWork, observation });
     } catch (error) {
       console.log(error);
       throw new HttpException(

@@ -19,8 +19,9 @@ export class SpotHoleService {
     lat: number;
     lng: number;
     imgBeforeWork: Express.Multer.File;
+    observation: string;
   }) {
-    const { lat, lng, imgBeforeWork } = data;
+    const { lat, lng, imgBeforeWork, observation } = data;
 
     const addressData = await this.getAddressFromLatLng(lat, lng);
 
@@ -28,6 +29,7 @@ export class SpotHoleService {
       priority: '',
       size: '',
       trafficIntensity: '',
+      observation: observation || null,
       status: 'Em aberto',
       createdBy: 'Sistema',
       fixedBy: '',

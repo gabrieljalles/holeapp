@@ -4,6 +4,7 @@ import L from "leaflet";
 import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
+import { fetchHoles } from "@/app/_utils/fetchHoles";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -17,11 +18,6 @@ const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
   { ssr: false }
 );
-const Circle = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Circle),
-  { ssr: false }
-);
-
 const customIcon = new L.Icon({
   iconUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
@@ -29,47 +25,40 @@ const customIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-const MapClickHandler = ({ onMapClick, isMarking }: any) => {
+interface HoleData {
+  id: string;
+  lat: number;
+  lng: number;
+  [key: string]: any;
+}
+
+const MapClickHandler = ({ onMapClick, isMarking, setClickedLocation }: any) => {
   useMapEvents({
     click: (e) => {
       if (isMarking) {
         const { lat, lng } = e.latlng;
         onMapClick({ lat, lng });
+        setClickedLocation([lat, lng]);
       }
     },
   });
   return null;
 };
 
-const RealtimeLocation = ({ isMarking, onMapClick }: any) => {
-  //Localização atual do usuário:
+const RealtimeLocation = ({ isMarking, onMapClick, data }:
+  {isMarking: boolean,
+    onMapClick: (location: { lat: number; lng: number }) => void;
+    data: HoleData[];
+  }
+) => {
+
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
-  const [spotholes, setSpotholes] = useState<any[]>([]);
 
-  //Clique realizado:
   const [clickedLocation, setClickedLocation] = useState<
     [number, number] | null
   >(null);
-
-  useEffect(() => {
-    const fetchSpotholes = async () => {
-      try {
-        const response = await fetch("/api/holes");
-
-        if (!response.ok) {
-          throw new Error("Erro ao buscar spotholes");
-        }
-
-        const data = await response.json();
-        setSpotholes(data);
-      } catch (error) {
-        console.error("Erro ao buscar buracos no banco de dados:", error);
-      }
-    };
-    fetchSpotholes();
-  }, []);
 
   //Obter localização do usuário
   useEffect(() => {
@@ -116,7 +105,7 @@ const RealtimeLocation = ({ isMarking, onMapClick }: any) => {
         <Marker position={clickedLocation} icon={customIcon} />
       )}
 
-      {spotholes.map((spot) => {
+      {data.map((spot: HoleData) => {
         if (!spot.lat || !spot.lng) return null;
         return <HoleMap spot={spot} key={spot.id} />;
       })}
