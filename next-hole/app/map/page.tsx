@@ -6,6 +6,7 @@ import AddHoleButton from "./_components/add-hole-button";
 import AddHolePopup from "./_components/add-hole-popup";
 import axios from "axios";
 import { fetchHoles } from "../_utils/fetchHoles";
+import { toast } from "@/hooks/use-toast";
 
 const RealtimeLocation = dynamic(
   () => import("./_components/real-time-location"),
@@ -15,7 +16,7 @@ const RealtimeLocation = dynamic(
 interface HoleDataProps {
   lat: number;
   lng: number;
-  imgBeforeWork: File | null; 
+  imgBeforeWork: File | null;
   observation: string;
 }
 
@@ -25,7 +26,6 @@ const MapPage = () => {
 
   const [getSpotHoles, setGetSpotHoles] = useState<any[]>([]);
   const [refresh, setRefresh] = useState(false);
-
   const [holeData, setHoleData] = useState<HoleDataProps>({
     lat: 0,
     lng: 0,
@@ -33,8 +33,14 @@ const MapPage = () => {
     observation: "",
   });
   const handleActivateMarking = () => {
+    toast({
+      variant: "default",
+      title: "Selecione no mapa",
+      description: "Escolha onde ficará o botão no mapa!",
+    });
     setIsMarking(true);
   };
+
   const handleMapClick = ({ lat, lng }: { lat: number; lng: number }) => {
     setHoleData({ ...holeData, lat, lng });
     setIsMarking(false);
@@ -42,25 +48,24 @@ const MapPage = () => {
   };
 
   //Chama do banco os buracos;
-  useEffect (() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const dataDb = await fetchHoles();
         setGetSpotHoles(dataDb);
-      }catch (error){
-        console.error("Erro ao realizar a busca de dados no /api")
+      } catch (error) {
+        console.error("Erro ao realizar a busca de dados no /api");
       }
-    }
+    };
 
     fetchData();
-  },[refresh]);
+  }, [refresh]);
 
   const handleRefresh = () => {
     setRefresh((prev) => !prev);
-  }
+  };
 
   const handlePopupSubmit = async (data: HoleDataProps) => {
-
     const formData = new FormData();
 
     formData.append("lat", holeData.lat.toString());
@@ -69,7 +74,7 @@ const MapPage = () => {
 
     if (!data.imgBeforeWork) {
       return;
-    }else {
+    } else {
       formData.append("imgBeforeWork", data.imgBeforeWork);
     }
 
@@ -89,7 +94,11 @@ const MapPage = () => {
 
   return (
     <div className="relative w-full h-full">
-      <RealtimeLocation isMarking={isMarking} onMapClick={handleMapClick} data={getSpotHoles} />
+      <RealtimeLocation
+        isMarking={isMarking}
+        onMapClick={handleMapClick}
+        data={getSpotHoles}
+      />
       <AddHoleButton onActivate={handleActivateMarking} />
       <AddHolePopup
         isVisible={showPopup}
@@ -103,5 +112,3 @@ const MapPage = () => {
 };
 
 export default MapPage;
-
-//A pessoa consegue enviar mesmo sem colocar uma nova imagem, depois do anterior.

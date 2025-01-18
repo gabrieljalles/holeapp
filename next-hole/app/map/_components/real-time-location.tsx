@@ -32,7 +32,11 @@ interface HoleData {
   [key: string]: any;
 }
 
-const MapClickHandler = ({ onMapClick, isMarking, setClickedLocation }: any) => {
+const MapClickHandler = ({
+  onMapClick,
+  isMarking,
+  setClickedLocation,
+}: any) => {
   useMapEvents({
     click: (e) => {
       if (isMarking) {
@@ -45,20 +49,18 @@ const MapClickHandler = ({ onMapClick, isMarking, setClickedLocation }: any) => 
   return null;
 };
 
-const RealtimeLocation = ({ isMarking, onMapClick, data }:
-  {isMarking: boolean,
-    onMapClick: (location: { lat: number; lng: number }) => void;
-    data: HoleData[];
-  }
-) => {
-
+const RealtimeLocation = ({
+  isMarking,
+  onMapClick,
+  data,
+}: {
+  isMarking: boolean;
+  onMapClick: (location: { lat: number; lng: number }) => void;
+  data: HoleData[];
+}) => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
-
-  const [clickedLocation, setClickedLocation] = useState<
-    [number, number] | null
-  >(null);
 
   //Obter localização do usuário
   useEffect(() => {
@@ -100,10 +102,6 @@ const RealtimeLocation = ({ isMarking, onMapClick, data }:
       />
 
       {userPosition && <Marker position={userPosition} icon={customIcon} />}
-
-      {clickedLocation && (
-        <Marker position={clickedLocation} icon={customIcon} />
-      )}
 
       {data.map((spot: HoleData) => {
         if (!spot.lat || !spot.lng) return null;

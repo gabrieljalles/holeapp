@@ -1,4 +1,5 @@
 "use client";
+import { LatLngExpression } from "leaflet";
 import dynamic from "next/dynamic";
 import React from "react";
 
@@ -23,6 +24,7 @@ interface HoleMapProps {
 }
 
 const HoleMap = ({ spot }: HoleMapProps) => {
+  const center: LatLngExpression = [spot.lat, spot.lng];
   return (
     <React.Fragment key={spot.id}>
       <Circle
