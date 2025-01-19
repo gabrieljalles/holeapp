@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
 import { fetchHoles } from "@/app/_utils/fetchHoles";
+import EditHolePopup from "./edit-hole-popup";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -29,7 +30,22 @@ interface HoleData {
   id: string;
   lat: number;
   lng: number;
-  [key: string]: any;
+  status: string;
+  number: number;
+  observation: string;
+  address: string;
+  cep: string;
+  createdAt: string;
+  createdBy: string;
+  district: string;
+  fixedAt: string;
+  fixedBy: string;
+  imgAfterWorkPath: string;
+  imgBeforeWorkPath: string;
+  priority: string;
+  size: string;
+  trafficIntensity: string;
+  zone: string;
 }
 
 const MapClickHandler = ({
@@ -61,6 +77,8 @@ const RealtimeLocation = ({
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
+
+  const [selectedSpot, setSelectedSpot] = useState<HoleData | null>(null);
 
   //Obter localização do usuário
   useEffect(() => {
@@ -101,11 +119,19 @@ const RealtimeLocation = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
+      {selectedSpot && <EditHolePopup data={selectedSpot} />}
+
       {userPosition && <Marker position={userPosition} icon={customIcon} />}
 
       {data.map((spot: HoleData) => {
         if (!spot.lat || !spot.lng) return null;
-        return <HoleMap spot={spot} key={spot.id} />;
+        return (
+          <HoleMap
+            spot={spot}
+            key={spot.id}
+            onClickSpot={(clickeSpot) => setSelectedSpot(clickeSpot)}
+          />
+        );
       })}
 
       <MapClickHandler onMapClick={onMapClick} isMarking={isMarking} />
