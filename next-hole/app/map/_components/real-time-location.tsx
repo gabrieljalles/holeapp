@@ -4,9 +4,8 @@ import L from "leaflet";
 import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
-import { fetchHoles } from "@/app/_utils/fetchHoles";
 import EditHolePopup from "./edit-hole-popup";
-
+import {Spot} from '@/types/Spot';
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -25,28 +24,6 @@ const customIcon = new L.Icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
-
-interface HoleData {
-  id: string;
-  lat: number;
-  lng: number;
-  status: string;
-  number: number;
-  observation: string;
-  address: string;
-  cep: string;
-  createdAt: string;
-  createdBy: string;
-  district: string;
-  fixedAt: string;
-  fixedBy: string;
-  imgAfterWorkPath: string;
-  imgBeforeWorkPath: string;
-  priority: string;
-  size: string;
-  trafficIntensity: string;
-  zone: string;
-}
 
 const MapClickHandler = ({
   onMapClick,
@@ -72,13 +49,13 @@ const RealtimeLocation = ({
 }: {
   isMarking: boolean;
   onMapClick: (location: { lat: number; lng: number }) => void;
-  data: HoleData[];
+  data: Spot[];
 }) => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
 
-  const [selectedSpot, setSelectedSpot] = useState<HoleData | null>(null);
+  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
 
   //Obter localização do usuário
   useEffect(() => {
@@ -119,11 +96,11 @@ const RealtimeLocation = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {selectedSpot && <EditHolePopup data={selectedSpot} />}
+      {selectedSpot && <EditHolePopup data={selectedSpot} onClose={() => setSelectedSpot(null)} />}
 
       {userPosition && <Marker position={userPosition} icon={customIcon} />}
 
-      {data.map((spot: HoleData) => {
+      {data.map((spot: Spot) => {
         if (!spot.lat || !spot.lng) return null;
         return (
           <HoleMap

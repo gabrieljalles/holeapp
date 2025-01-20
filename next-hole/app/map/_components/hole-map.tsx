@@ -2,42 +2,12 @@
 import { LatLngExpression } from "leaflet";
 import dynamic from "next/dynamic";
 import React from "react";
+import { Spot } from "@/types/Spot"
 
 const Circle = dynamic(
   () => import("react-leaflet").then((mod) => mod.Circle),
   { ssr: false }
 );
-
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
-
-interface Spot {
-  id: string;
-  lat: number;
-  lng: number;
-  status: string;
-  number: number;
-  observation: string;
-  address: string;
-  cep: string;
-  createdAt: string;
-  createdBy: string;
-  district: string;
-  fixedAt: string;
-  fixedBy: string;
-  imgAfterWorkPath: string;
-  imgBeforeWorkPath: string;
-  priority: string;
-  size: string;
-  trafficIntensity: string;
-  zone: string;
-}
 
 interface HoleMapProps {
   spot: Spot;
@@ -65,6 +35,9 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
         color="black"
         fillColor="black"
         fillOpacity={1}
+        eventHandlers={{
+          click: () => onClickSpot(spot),
+        }}
       />
     </React.Fragment>
   );
