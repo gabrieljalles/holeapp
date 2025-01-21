@@ -1,3 +1,4 @@
 # O que deve ser feito?
 
-Criar tipos de variant para o toast;
+Alterar o next.config.mjs para o novo domínio, quando o next for para o domínio publico junto com o backend
+Passar o leaftlet para googlle, alguns lugares não estão conseguindo puxar os dados corretamente.

@@ -12,7 +12,7 @@ import {
   Triangle,
 } from "lucide-react";
 import Image from "next/image";
-import { diferenceDays, formatMyDate } from "@/lib/date";
+import { formatMyDate } from "@/lib/date";
 
 interface EditHolePopupProps {
   data: Spot;
@@ -85,10 +85,16 @@ const EditHolePopup = ({ data, onClose }: EditHolePopupProps) => {
             X
           </Button>
         </div>
-
-        <div className="w-full h-[180px] bg-gray-300 rounded-md">
-          Imagem do buraco
-        </div>
+        {data.imgBeforeWorkPath && (
+          <div className="relative w-full h-[320px] bg-gray-300 rounded-md overflow-hidden">
+            <Image
+              src={`http://localhost:3001/${data.imgBeforeWorkPath}`}
+              alt="Imagem do buraco antes do conserto."
+              layout="fill"
+              objectFit="cover" // Ajusta o conteúdo sem distorcer
+            />
+          </div>
+        )}
 
         <div className="flex flex-col gap-2 rounded-sm">
           <div className="flex w-full mb-2 gap-2">
