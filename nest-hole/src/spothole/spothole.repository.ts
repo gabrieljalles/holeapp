@@ -16,4 +16,18 @@ export class SpotHoleRepository {
   async create(data: Prisma.SpotHoleCreateInput) {
     return this.prisma.spotHole.create({ data });
   }
+
+  //Deleta uma linha no banco
+  async delete(id: string){
+    return this.prisma.spotHole.delete({
+      where: {id},
+    })
+  }
+
+  //Procura por uma linha específica
+  async findUnique(id:string) {
+    return this.prisma.spotHole.findUnique({
+      where: {id},
+    })
+  }
 }

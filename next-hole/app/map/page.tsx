@@ -22,7 +22,8 @@ interface HoleDataProps {
 
 const MapPage = () => {
   const [isMarking, setIsMarking] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [getSpotHoles, setGetSpotHoles] = useState<any[]>([]);
   const [refresh, setRefresh] = useState(false);
   const [holeData, setHoleData] = useState<HoleDataProps>({
@@ -35,7 +36,7 @@ const MapPage = () => {
     toast({
       variant: "default",
       title: "Selecione no mapa",
-      description: "Escolha onde ficará o botão no mapa!",
+      description: "Escolha onde ficará o buraco no mapa!",
     });
     setIsMarking(true);
   };
@@ -43,7 +44,7 @@ const MapPage = () => {
   const handleMapClick = ({ lat, lng }: { lat: number; lng: number }) => {
     setHoleData({ ...holeData, lat, lng });
     setIsMarking(false);
-    setShowPopup(true);
+    setShowAddPopup(true);
   };
 
   //Chama do banco os buracos;
@@ -84,7 +85,7 @@ const MapPage = () => {
         },
       });
       console.log("Success:", response.data);
-      setShowPopup(false);
+      setShowAddPopup(false);
       handleRefresh();
     } catch (error) {
       console.error("Error:", error);
@@ -95,14 +96,19 @@ const MapPage = () => {
     <div className="relative w-full h-full">
       <RealtimeLocation
         isMarking={isMarking}
+        setIsEditPopupOpen = {setIsEditPopupOpen}
         onMapClick={handleMapClick}
         data={getSpotHoles}
+        onRefresh = {handleRefresh}
       />
-      <AddHoleButton onActivate={handleActivateMarking} />
+      
+      <AddHoleButton isVisible={!showAddPopup && !isEditPopupOpen} onActivate={handleActivateMarking} />
+      
+      
       <AddHolePopup
-        isVisible={showPopup}
+        isVisible={showAddPopup}
         onClose={() => {
-          setShowPopup(false);
+          setShowAddPopup(false);
         }}
         onSubmit={handlePopupSubmit}
       />

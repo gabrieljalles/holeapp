@@ -2,11 +2,13 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
   UploadedFile,
   UseInterceptors,
   HttpException,
   HttpStatus,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/shared/multer.config';
@@ -28,6 +30,37 @@ export class SpotHoleController {
     }
   }
 
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    try {
+      if (!id) {
+        throw new HttpException(
+          'O ID fornecido deve um texto válido.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const deletedSpotHole = await this.spotHoleService.delete(id);
+
+      if (!deletedSpotHole) {
+        throw new HttpException(
+          'Registro não encontrado.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return {
+        message: 'Registro deletado com sucesso.',
+        deletedSpotHole,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Erro ao deletar o registro.',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  
   @Post()
   @UseInterceptors(FileInterceptor('imgBeforeWork', multerOptions))
   async create(

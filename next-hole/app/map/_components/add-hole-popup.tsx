@@ -71,7 +71,7 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex z-[1000] items-center justify-center">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex z-[100] items-center justify-center">
       <div className="mx-2 bg-white p-6 rounded-xl shadow-lg max-w-lg w-full">
         <h2 className="text-xl flex gap-4 items-center justify-center font-semibold mb-5">
           Adicionar informações do buraco

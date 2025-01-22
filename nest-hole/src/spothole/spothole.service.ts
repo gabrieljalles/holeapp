@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import * as L from 'leaflet';
+import * as fs from 'fs';
 import { SpotHoleRepository } from './spothole.repository';
 import { Prisma, SpotHole } from '@prisma/client';
 import axios from 'axios';
+import * as path from 'path';
 
 @Injectable()
 export class SpotHoleService {
@@ -49,6 +49,25 @@ export class SpotHoleService {
     return this.spotHoleRepository.create(newSpotHole);
   }
 
+  async delete(id:string): Promise<SpotHole>{
+
+  const spotHole = await this.spotHoleRepository.findUnique(id);
+  
+  if(!spotHole){
+    throw new Error('Registro não encontrado.');
+  }
+
+  if(spotHole.imgBeforeWorkPath){
+    this.deleteFile(spotHole.imgBeforeWorkPath)
+  }
+
+  if(spotHole.imgAfterWorkPath){
+    this.deleteFile(spotHole.imgAfterWorkPath)
+  }
+
+    return this.spotHoleRepository.delete(id);
+  }
+
   private async getAddressFromLatLng(
     lat: number,
     lng: number,
@@ -71,5 +90,17 @@ export class SpotHoleService {
         'Não foi possível buscar o endereço. Verifique a conexão.',
       );
     }
+  }
+
+  private deleteFile(filePath: string){
+    const absolutePath = path.resolve(filePath);
+
+    fs.unlink(absolutePath, (err)=> {
+      if (err){
+        console.error(`Erro ao excluir o arquivo ${absolutePath}`, err);
+      } else {
+        console.log(`Arquivo excluído: ${absolutePath}`)
+      }
+    })
   }
 }

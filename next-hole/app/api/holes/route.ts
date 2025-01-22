@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 //POST Line
@@ -47,3 +48,42 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+// DELETE ONE
+export async function DELETE(req: NextRequest, res : NextResponse) {
+
+  try { 
+    const {searchParams} = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id){
+      return NextResponse.json(
+        {message: "ID inválido ou não fornecido!"},
+        {status: 400}
+      )
+    }
+
+    const response = await axios.delete(`http://localhost:3001/spothole/${id}`);
+
+    return NextResponse.json(
+      { message: "Buraco deletado com sucesso!", data: response.data },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error("Erro ao deletar buraco:", error);
+
+    if (error.response) {
+      return NextResponse.json(
+        { message: error.response.data.message || "Erro ao deletar o buraco!" },
+        { status: error.response.status || 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Erro interno no servidor." },
+      { status: 500 }
+    );
+  }
+}
+
+    

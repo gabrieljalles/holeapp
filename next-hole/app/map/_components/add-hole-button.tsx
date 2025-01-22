@@ -4,9 +4,13 @@ import { FaClipboard, FaCog, FaPlus } from "react-icons/fa";
 
 interface AddHoleButtonProps {
   onActivate: () => void;
+  isVisible: boolean;
 }
 
-const AddHoleButton = ({ onActivate }: AddHoleButtonProps) => {
+const AddHoleButton = ({ onActivate, isVisible }: AddHoleButtonProps) => {
+
+  if (!isVisible) return null;
+
   return (
     <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 max-w-[350px] min-w-[280px] p-2 h-16 z-[1000] flex gap-2 items-center justify-between">
       <Button

@@ -46,10 +46,14 @@ const RealtimeLocation = ({
   isMarking,
   onMapClick,
   data,
+  setIsEditPopupOpen,
+  onRefresh,
 }: {
   isMarking: boolean;
   onMapClick: (location: { lat: number; lng: number }) => void;
   data: Spot[];
+  setIsEditPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onRefresh: () => void;
 }) => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
@@ -96,7 +100,13 @@ const RealtimeLocation = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {selectedSpot && <EditHolePopup data={selectedSpot} onClose={() => setSelectedSpot(null)} />}
+      {selectedSpot && 
+      <EditHolePopup 
+      onRefresh={onRefresh} 
+      setIsEditPopupOpen={setIsEditPopupOpen} 
+      setSelectedSpot={setSelectedSpot} 
+      data={selectedSpot} 
+      onClose={() => setSelectedSpot(null)} />}
 
       {userPosition && <Marker position={userPosition} icon={customIcon} />}
 
