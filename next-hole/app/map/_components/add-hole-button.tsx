@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { FaClipboard, FaCog, FaPlus } from "react-icons/fa";
 
 interface AddHoleButtonProps {
@@ -18,6 +17,7 @@ const AddHoleButton = ({ onActivate, isVisible }: AddHoleButtonProps) => {
         onClick={onActivate}
       >
         <FaPlus size={36} />
+        
         Adicionar buraco
       </Button>
     </div>

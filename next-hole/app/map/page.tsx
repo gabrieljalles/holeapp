@@ -23,7 +23,7 @@ interface HoleDataProps {
 const MapPage = () => {
   const [isMarking, setIsMarking] = useState(false);
   const [showAddPopup, setShowAddPopup] = useState(false);
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [isEditPopupOpen, isShowPopupOpen] = useState(false);
   const [getSpotHoles, setGetSpotHoles] = useState<any[]>([]);
   const [refresh, setRefresh] = useState(false);
   const [holeData, setHoleData] = useState<HoleDataProps>({
@@ -96,7 +96,7 @@ const MapPage = () => {
     <div className="relative w-full h-full">
       <RealtimeLocation
         isMarking={isMarking}
-        setIsEditPopupOpen = {setIsEditPopupOpen}
+        isShowPopupOpen = {isShowPopupOpen}
         onMapClick={handleMapClick}
         data={getSpotHoles}
         onRefresh = {handleRefresh}

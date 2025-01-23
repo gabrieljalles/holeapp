@@ -4,7 +4,7 @@ import L from "leaflet";
 import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
-import EditHolePopup from "./edit-hole-popup";
+import ShowHolePopup from "./show-hole-popup";
 import {Spot} from '@/types/Spot';
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -46,13 +46,13 @@ const RealtimeLocation = ({
   isMarking,
   onMapClick,
   data,
-  setIsEditPopupOpen,
+  isShowPopupOpen,
   onRefresh,
 }: {
   isMarking: boolean;
   onMapClick: (location: { lat: number; lng: number }) => void;
   data: Spot[];
-  setIsEditPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isShowPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onRefresh: () => void;
 }) => {
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
@@ -101,9 +101,9 @@ const RealtimeLocation = ({
       />
 
       {selectedSpot && 
-      <EditHolePopup 
+      <ShowHolePopup 
       onRefresh={onRefresh} 
-      setIsEditPopupOpen={setIsEditPopupOpen} 
+      isShowPopupOpen={isShowPopupOpen} 
       setSelectedSpot={setSelectedSpot} 
       data={selectedSpot} 
       onClose={() => setSelectedSpot(null)} />}

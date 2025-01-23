@@ -24,11 +24,11 @@ body {
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
-    --successful: 173 58% 39%;
-    --successful-foreground: 0 0% 98%;
-    --waiting: 43 74% 66%;
-    --waiting-foreground: 0 0% 98%;
     --destructive-foreground: 0 0% 98%;
+    --successful: 173 58% 39%;
+    --successful-foreground:0 0% 98%;
+    --waiting: 43 74% 66%;
+    --waiting-foreground: 0 0% 3.9%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
