@@ -30,4 +30,12 @@ export class SpotHoleRepository {
       where: {id},
     })
   }
+
+  //Update uma linha no banco
+  async update(id: string, data: Partial<SpotHole>){
+    return this.prisma.spotHole.update({
+      where: {id},
+      data,
+    })
+  }
 }

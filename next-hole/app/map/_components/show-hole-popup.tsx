@@ -115,7 +115,7 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
   }
 
   return (
-    <div className="absolute h-[800px] inset-0 bg-gray-900 bg-opacity-50 flex z-[1000] items-center justify-center">
+    <div className="absolute h-full inset-0 bg-gray-900 bg-opacity-50 flex z-[1000] items-center justify-center">
       <div className=" flex flex-col bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full gap-4">
         <div className="flex flex-row justify-between">
           <div className="flex-1 flex flex-nowrap items-center  bg-white rounded-sm gap-2">
@@ -164,6 +164,18 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
        <ImageCarousel imgAfterWorkPath={data.imgAfterWorkPath} imgBeforeWorkPath={data.imgBeforeWorkPath}/>
 
         <div className="flex flex-col gap-2 rounded-sm">
+
+        <div className="flex w-full mb-2 gap-2">
+            <div className="flex mr-4">
+              <p className="font-bold">Criado por:</p>
+              <p> {data.createdBy}</p>
+            </div>
+            <div className="flex mr-4">
+              <p className="font-bold">Reparado por:</p>
+              <p>{data.fixedBy}</p>
+            </div>
+          </div>
+
           <div className="flex w-full mb-2 gap-2">
             <div className="flex mr-4">
               <p className="font-bold">Zona:</p>
@@ -178,6 +190,8 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
               <p>{data.cep}</p>
             </div>
           </div>
+
+
 
           <div className="flex w-full mb-2 ">
             <div className="flex mr-4">
@@ -227,6 +241,8 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
               </div>
             )}
           </div>
+
+          
 
           <div className="w-full">
             <p className="font-bold flex gap-1">

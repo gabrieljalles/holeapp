@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { SpotHoleRepository } from './spothole.repository';
 import { Prisma, SpotHole } from '@prisma/client';
+import { NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 import * as path from 'path';
 
@@ -47,6 +48,25 @@ export class SpotHoleService {
     };
 
     return this.spotHoleRepository.create(newSpotHole);
+  }
+
+  async update(id: string, data: Partial<SpotHole>){
+    const spotHole = await this.spotHoleRepository.findUnique(id);
+
+    if(!spotHole){
+     throw new NotFoundException(`Spothole com id ${id} não encontrado.`);
+    }
+
+    {/*Se existe no banco e tiver atualizações:*/}
+    if(spotHole.imgBeforeWorkPath && data.imgBeforeWorkPath){
+      this.deleteFile(spotHole.imgBeforeWorkPath)
+    }
+    {/*Se existe no banco e tiver atualizações:*/}
+    if(spotHole.imgAfterWorkPath && data.imgAfterWorkPath){
+      this.deleteFile(spotHole.imgAfterWorkPath)
+    }
+
+    return this.spotHoleRepository.update(id, data);
   }
 
   async delete(id:string): Promise<SpotHole>{

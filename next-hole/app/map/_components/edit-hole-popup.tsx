@@ -6,6 +6,8 @@ import { useState } from "react"
 import Combobox from "@/components/combobox"
 import { Spot } from "@/types/Spot";
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { MdPhotoCamera } from "react-icons/md"
 
 const statusList = [
     {
@@ -28,13 +30,20 @@ interface EditHolePopupProps {
 }
 
 const EditHolePopup = ({data, onClose}: EditHolePopupProps) => {
-    const [status, setStatus] = useState(data.status);
-    const [endereco, setEndereco] = useState(data.address);
-    const [numero, setNumero] = useState(data.number);
+    const [status, setStatus] = useState(data.status || "Sem status");
+    const [endereco, setEndereco] = useState(data.address || "Sem endereço");
+    const [numero, setNumero] = useState(data.number || "");
+    const [cep, setCep] = useState(data.cep || "Sem CEP"); 
+    const [bairro, setBairro] = useState(data.district || "Sem bairro");
+    const [setor, setSetor] = useState(data.zone);
+    const [prioridade, setPrioridade] = useState(data.priority);
+    const [trafficIntensity, setTrafficIntensity] = useState(data.trafficIntensity);
+    const [tamanho, setTamanho] = useState(data.size);
+
 
     return ( 
         <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-[100]">
-             <div className=" flex flex-col bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full gap-4">
+             <div className=" flex flex-col bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full gap-4 mx-4">
 
                 <h2 className="text-xl flex gap-4 items-center justify-center font-semibold mb-5">
                     Alterar informações do buraco
@@ -45,18 +54,61 @@ const EditHolePopup = ({data, onClose}: EditHolePopupProps) => {
                 <Combobox statusList={statusList} selectedValue={status} onChange={setStatus} />
                 </div>
                 {/* DADOS DE ENDEREÇO */}
-                <div>
-                    <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium">Endereço</label>
-                        <Input className="flex-grow" placeholder={endereco} />
-                        <label className="text-sm font-medium">Número</label>
-                        <Input  maxLength={5} className="w-16" placeholder={numero} />
+                <div className="border-b">
+                    <div className="flex flex-wrap items-center gap-2 my-1">
+                        <label className="text-sm font-medium">CEP</label>
+                        <Input className="w-28" placeholder={cep} />
+
+                        <label className="text-sm font-medium">Setor</label>
+                        <Input className="w-32" placeholder={setor} />
+                        
+                        <div className="flex items-center flex-grow gap-2">
+                            <label className="text-sm font-medium">Bairro</label>
+                            <Input className="flex-grow" placeholder={bairro} />
+                        </div>
+                        
                     </div>
-                    <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium">Endereço</label>
-                    <Input placeholder={endereco} />
+                    <div className="flex flex-wrap items-center gap-2 my-1">
+                        <div className="flex flex-grow items-center gap-2">
+                            <label className="text-sm font-medium">Endereço</label>
+                            <Input className="flex-grow" placeholder={endereco} />
+                        </div>
+                        <div className="flex flex-grow items-center gap-2">
+                            <label className="text-sm font-medium">Número</label>
+                            <Input  maxLength={5} placeholder={numero.toString()} />
+                        </div>
+                        
                     </div>
+                    
                 
+                </div  >
+                {/* DADOS DO BURACO */}
+                <div className="border-b">
+                    <div className="flex items-center gap-2 my-1">
+                        <label className="text-sm font-medium">{`Area (m2)`}</label>
+                        <Input className="w-32" placeholder={tamanho} />
+                        <label className="text-sm font-medium">Prioridade</label>
+                        <Input className="w-32" placeholder={prioridade} />
+                    </div>
+
+                    {status == "Reparado" && (
+                        <div className="mb-4">
+                        <Label
+                            htmlFor="file"
+                            className=" w-full flex gap-1 items-center text-sm font-medium mb-1"
+                        >
+                            <MdPhotoCamera size={16} />
+                            Buraco reparado
+                        </Label>
+                        <Input
+                            type="file"
+                            name="imgAfterWork"
+                            accept="image/*"
+                            capture="environment"
+                        />
+                    </div>
+                    )}
+                    
                 </div>
                 
                 
