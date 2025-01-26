@@ -25,7 +25,7 @@ const ImageCarousel = ({ imgBeforeWorkPath, imgAfterWorkPath }:ImageCarouselProp
   };
 
   return (
-    <div className="relative w-full h-[320px] bg-gray-300 rounded-md overflow-hidden">
+    <div className="relative w-full h-[280px] bg-gray-300 rounded-md overflow-hidden">
       {images.length > 0 && (
         <>
           <Image

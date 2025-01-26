@@ -33,7 +33,7 @@ const Combobox = ({statusList, selectedValue, onChange }: ComboboxProps) => {
     }
 
     return (
-        <div className="relative w-64">
+        <div className="relative w-full">
       
         <Button
             type="button"

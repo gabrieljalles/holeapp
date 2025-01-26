@@ -118,9 +118,9 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
     <div className="absolute h-full inset-0 bg-gray-900 bg-opacity-50 flex z-[1000] items-center justify-center">
       <div className=" flex flex-col bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full gap-4">
         <div className="flex flex-row justify-between">
-          <div className="flex-1 flex flex-nowrap items-center  bg-white rounded-sm gap-2">
+          <div className="flex-1 flex flex-wrap items-center  bg-white rounded-sm gap-2">
             <h1 className=" bg-white font-semibold rounded-sm text-sm text-center">
-              {data.id}
+              {(data.id).slice(-12)}
             </h1>
             <Badge
               variant={getBadgeVariant(data.status)}
