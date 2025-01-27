@@ -1,10 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FaClipboard, FaPlus, FaCog } from "react-icons/fa";
+import { redirect } from "next/navigation";
+
 const Home = () => {
-  return (
-   <h1>Ola mundo</h1>
-  )
+  redirect("/map");
 };
 
 export default Home;

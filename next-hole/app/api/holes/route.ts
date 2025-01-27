@@ -2,9 +2,9 @@ import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 //POST Line
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const formData = await request.formData();
+    const formData = await req.formData();
 
     const response = await fetch("http://localhost:3001/spothole", {
       method: "POST",
@@ -50,17 +50,16 @@ export async function GET(request: NextRequest) {
 }
 
 // DELETE ONE
-export async function DELETE(req: NextRequest, res : NextResponse) {
-
-  try { 
-    const {searchParams} = new URL(req.url);
+export async function DELETE(req: NextRequest, res: NextResponse) {
+  try {
+    const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    if (!id){
+    if (!id) {
       return NextResponse.json(
-        {message: "ID inválido ou não fornecido!"},
-        {status: 400}
-      )
+        { message: "ID inválido ou não fornecido!" },
+        { status: 400 }
+      );
     }
 
     const response = await axios.delete(`http://localhost:3001/spothole/${id}`);
@@ -87,6 +86,35 @@ export async function DELETE(req: NextRequest, res : NextResponse) {
 }
 
 //UPDATE ONE
+export async function PUT(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
+    if (!id) {
+      return NextResponse.json(
+        { message: "ID inválido ou não fornecido!" },
+        { status: 400 }
+      );
+    }
 
-    
+    const formData = await req.formData();
+
+    const response = await axios.put(
+      `http://localhost:3001/spothole/${id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return NextResponse.json(response.data, { status: 200 });
+  } catch (error) {
+    console.error("Erro ao atualizar o registro:", error);
+    return NextResponse.json(
+      { message: "Erro ao atualizar o registro." },
+      { status: 500 }
+    );
+  }
+}
