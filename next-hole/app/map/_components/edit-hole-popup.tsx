@@ -29,91 +29,72 @@ const statusList = [
 
 interface EditHolePopupProps {
   onClose: () => void;
+  onRefresh: () => void;
   data: Spot;
+  onEditHole: (formData: FormData) => Promise<void>;
 }
 
-const EditHolePopup = ({ data, onClose }: EditHolePopupProps) => {
+const EditHolePopup = ({ data, onClose, onRefresh, onEditHole}: EditHolePopupProps) => {
   const [status, setStatus] = useState(data.status || "Sem status");
-  const [endereco, setEndereco] = useState(data.address || "Sem endereço");
-  const [numero, setNumero] = useState(data.number || "");
-  const [cep, setCep] = useState(data.cep || "Sem CEP");
+  const [numero, setNumero] = useState(data.number);
   const [bairro, setBairro] = useState(data.district || "Sem bairro");
   const [setor, setSetor] = useState(data.zone);
-  const [prioridade, setPrioridade] = useState(data.priority);
-  const [trafficIntensity, setTrafficIntensity] = useState(
-    data.trafficIntensity
-  );
   const [tamanho, setTamanho] = useState(data.size);
   const [observation, setObservation] = useState(data.observation);
   const [imgBeforeWork, setImgBeforeWork] = useState<File | null>(null);
   const [imgAfterWork, setImgAfterWork] = useState<File | null>(null);
-  const [fixedAt, setFixedAt] = useState<string | null>(data.fixedAt || null);
+  const [fixedAt, setFixedAt] = useState(data.fixedAt || null);
 
   useEffect(() => {
-    if (status == "Reparado") {
+    if (status == "Reparado" && !data.imgAfterWorkPath) {
       setFixedAt(new Date().toISOString());
     } else {
       setFixedAt(null);
+      setImgAfterWork(null);
     }
   }, [status]);
 
   const handleSave = async () => {
-    if (status === "Reparado" && !imgAfterWork) {
-      toast({
-        variant: "destructive",
-        title: "Falta a imagem de reparo!",
-        description: "Você precisa adicionar a foto do buraco reformado!",
-        duration: 7000,
-      });
-      return;
+    if (status === "Reparado" && !data.imgAfterWorkPath) {
+      if(!imgAfterWork){
+        toast({
+          variant: "destructive",
+          title: "Falta a imagem de reparo!",
+          description: "Você precisa adicionar a foto do buraco reformado!",
+          duration: 7000,
+        });
+        return;
+      }
     }
 
-    try {
-      const formData = new FormData();
-      formData.append("status", status);
-      formData.append("address", endereco);
-      formData.append("number", numero.toString());
-      formData.append("cep", cep);
-      formData.append("district", bairro);
-      formData.append("zone", setor);
-      formData.append("priority", String(prioridade));
-      formData.append("trafficIntensity", String(trafficIntensity));
-      formData.append("size", String(tamanho));
-      formData.append("observation", observation || "");
-      if (fixedAt) {
-        formData.append("fixedAt", fixedAt);
-      }
-      if (imgBeforeWork) {
-        formData.append("imgBeforeWork", imgBeforeWork);
-      }
-      if (imgAfterWork) {
-        formData.append("imgAfterWork", imgAfterWork);
-      }
+    const formData = new FormData();
+    formData.append("id", data.id);
+    formData.append("status", status);
+    formData.append("number", numero ?? "");
+    formData.append("district", bairro ?? "");
+    formData.append("zone", setor ?? "");
+    formData.append("size", tamanho ?? "");
+    formData.append("observation", observation ?? "");
 
-      const res = await fetch(`/api/holes?id=${data.id}`, {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (res.ok) {
-        throw new Error("Falha ao atualizar");
-      }
-
-      toast({
-        variant: "successful",
-        title: "Registro alterado com sucesso!",
-        duration: 7000,
-      });
-      onClose(); // fecha modal
-    } catch (err: any) {
-      console.error(err);
-      toast({
-        variant: "destructive",
-        title: "Erro ao atualizar o buraco.",
-        duration: 7000,
-      });
+    if(fixedAt){
+      formData.append("fixedAt", fixedAt);
     }
-  };
+    if (imgBeforeWork) {
+      formData.append("imgBeforeWork", imgBeforeWork);
+    }
+    if (imgAfterWork) {
+      formData.append("imgAfterWork", imgAfterWork);
+    }
+
+    await onEditHole(formData);
+
+    onRefresh();
+    onClose();
+  }
+
+  const handleCancel = () => {
+    onClose();
+  }
 
   return (
     <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-[100]">
@@ -133,23 +114,13 @@ const EditHolePopup = ({ data, onClose }: EditHolePopupProps) => {
         {/* DADOS DE ENDEREÇO */}
         <div className="border-b flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <div className="flex flex-nowrap items-center gap-2">
-              <label className="text-sm font-medium">CEP</label>
-              <Input
-                className="w-28"
-                placeholder={cep}
-                value={cep}
-                onChange={(e) => setCep(e.target.value)}
-              />
-            </div>
-
             <div className="flex flex-grow items-center gap-2">
               <label className="text-sm font-medium">Número</label>
               <Input
                 className="  min-w-[30px]"
                 maxLength={5}
-                placeholder={numero.toString()}
-                value={numero.toString()}
+                placeholder={numero || ""}
+                value={numero || ""}
                 onChange={(e) => setNumero(e.target.value)}
               />
             </div>
@@ -172,15 +143,6 @@ const EditHolePopup = ({ data, onClose }: EditHolePopupProps) => {
                 value={setor}
                 className="flex-grow"
                 placeholder={setor}
-              />
-            </div>
-            <div className="flex flex-grow items-center gap-2">
-              <label className="text-sm font-medium">Endereço</label>
-              <Input
-                value={endereco}
-                className="flex-grow"
-                placeholder={endereco}
-                onChange={(e) => setEndereco(e.target.value)}
               />
             </div>
           </div>
@@ -267,7 +229,7 @@ const EditHolePopup = ({ data, onClose }: EditHolePopupProps) => {
         <div className="flex w-full justify-end space-x-2">
           <Button
             variant="ghost"
-            onClick={onClose}
+            onClick={handleCancel}
             className="flex-grow flex-2 px-4 py-2 border  font-semibold rounded"
           >
             Cancelar

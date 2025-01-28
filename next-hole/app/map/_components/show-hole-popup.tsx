@@ -27,7 +27,7 @@ interface ShowHolePopupProps {
   onClose: () => void;
   isShowPopupOpen : React.Dispatch<React.SetStateAction<boolean>>;
   onRefresh: () => void;
-  setSelectedSpot: React.Dispatch<React.SetStateAction<Spot | null>>;
+  setSelectedSpotId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 function getStatusIcon(status: string) {
@@ -55,10 +55,11 @@ function getBadgeVariant(status: string) {
   }
 }
 
-const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefresh}: ShowHolePopupProps) => {
+const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRefresh}: ShowHolePopupProps) => {
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isEditHoleOpen, setIsEditHoleOpen] = useState(false);
+  const [newData, setNewData] = useState<Spot>(data);
 
   useEffect(() => {
     isShowPopupOpen(true);
@@ -84,7 +85,7 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
           description: "Buraco e imagem foram apagados do banco permanentemente!",
         });
         onRefresh();
-        setSelectedSpot(null);
+        setSelectedSpotId(null);
         onClose();
       }else{
         toast({
@@ -101,6 +102,37 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
     }
   }
 
+  const handleEditHole = async (formData: FormData) => {
+    try {
+
+      const newStatus = formData.get("status") as string;
+
+      const response = await axios.put(`/api/holes?id=${data.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        toast({
+          variant: "successful",
+          title: "Buraco atualizado com sucesso!",
+          description: "As alterações foram salvas no servidor.",
+        });
+        onRefresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Não foi possível atualizar o buraco!",
+          description: `Erro : ${response.data.message}`,
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao editar o buraco:", error);
+      alert("Erro ao editar o buraco");
+    }
+  };
+
   const handleOpenGMaps = () => {
     const url = `https://www.google.com/maps/search/?api=1&query=${data.lat},${data.lng}`;
     window.open(url, "_blank");
@@ -110,8 +142,8 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
     setIsEditHoleOpen(true);
   }
 
-  const handleCloseEditHole = () => {
-    setIsEditHoleOpen(false);
+  const handleCloseEditHole = async () => {
+     setIsEditHoleOpen(false);
   }
 
   return (
@@ -123,7 +155,7 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
               {(data.id).slice(-12)}
             </h1>
             <Badge
-              variant={getBadgeVariant(data.status)}
+              variant={getBadgeVariant(data.status ?? "")}
               className=" flex-shrink-0 rounded-sm"
             >
               {getStatusIcon(data.status ?? "")}
@@ -190,8 +222,6 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
               <p>{data.cep}</p>
             </div>
           </div>
-
-
 
           <div className="flex w-full mb-2 ">
             <div className="flex mr-4">
@@ -263,10 +293,14 @@ const ShowHolePopup = ({setSelectedSpot, data, onClose, isShowPopupOpen, onRefre
             </Button>
 
             {isEditHoleOpen && (
-              <EditHolePopup data={data} onClose={handleCloseEditHole} /> 
+              <EditHolePopup 
+              data={data} 
+              onRefresh={onRefresh} 
+              onEditHole={handleEditHole}
+              onClose={handleCloseEditHole}/> 
             )}
           </div>
-        </div>
+        </div> 
       </div>
     </div>
   );

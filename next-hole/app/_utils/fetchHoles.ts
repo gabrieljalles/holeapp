@@ -1,6 +1,7 @@
 export const fetchHoles = async (): Promise<any[]> => {
     try {
-      const response = await fetch("/api/holes");
+      //CUIDADO COM O NO-CACHE
+      const response = await fetch("/api/holes",{cache: 'no-cache'});
   
       if (!response.ok) {
         throw new Error("Erro ao buscar buracos");
@@ -10,6 +11,6 @@ export const fetchHoles = async (): Promise<any[]> => {
       return data;
     } catch (error) {
       console.error("Erro ao buscar buracos no banco de dados:", error);
-      throw error; // Propaga o erro para ser tratado por quem chamar a função
+      throw error;
     }
   };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 interface ImageCarouselProps{
@@ -12,7 +12,7 @@ const ImageCarousel = ({ imgBeforeWorkPath, imgAfterWorkPath }:ImageCarouselProp
   const images = [
     imgBeforeWorkPath && `http://localhost:3001/${imgBeforeWorkPath}`,
     imgAfterWorkPath && `http://localhost:3001/${imgAfterWorkPath}`,
-  ].filter(Boolean); // Remove caminhos inválidos (null ou undefined)
+  ].filter(Boolean);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);

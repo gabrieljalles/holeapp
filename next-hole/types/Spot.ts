@@ -3,7 +3,7 @@ export interface Spot {
   lat: number;
   lng: number;
   status: string;
-  number: number;
+  number: string;
   observation: string;
   address: string;
   cep: string;

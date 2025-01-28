@@ -25,13 +25,14 @@ const MapPage = () => {
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [isEditPopupOpen, isShowPopupOpen] = useState(false);
   const [getSpotHoles, setGetSpotHoles] = useState<any[]>([]);
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const [holeData, setHoleData] = useState<HoleDataProps>({
     lat: 0,
     lng: 0,
     imgBeforeWork: null,
     observation: "",
   });
+
   const handleActivateMarking = () => {
     toast({
       variant: "default",
@@ -62,7 +63,7 @@ const MapPage = () => {
   }, [refresh]);
 
   const handleRefresh = () => {
-    setRefresh((prev) => !prev);
+    setRefresh((prev) => prev+1);
   };
 
   const handlePopupSubmit = async (data: HoleDataProps) => {

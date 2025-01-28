@@ -6,6 +6,7 @@ import { useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
 import ShowHolePopup from "./show-hole-popup";
 import {Spot} from '@/types/Spot';
+
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -36,7 +37,11 @@ const MapClickHandler = ({
         const { lat, lng } = e.latlng;
         onMapClick({ lat, lng });
         setClickedLocation([lat, lng]);
+      }else{
+        setClickedLocation();
       }
+
+
     },
   });
   return null;
@@ -58,10 +63,13 @@ const RealtimeLocation = ({
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
+  const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(
+    null
+  );
+  const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
 
-  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
-
-  //Obter localização do usuário
+  const selectedSpot = selectedSpotId ? data.find((s) => s.id === selectedSpotId):null;
+ 
   useEffect(() => {
     if (!navigator.geolocation || typeof window === "undefined") {
       console.error("Geolocation is not supported by your browser");
@@ -104,24 +112,26 @@ const RealtimeLocation = ({
       <ShowHolePopup 
       onRefresh={onRefresh} 
       isShowPopupOpen={isShowPopupOpen} 
-      setSelectedSpot={setSelectedSpot} 
+      setSelectedSpotId={setSelectedSpotId} 
       data={selectedSpot} 
-      onClose={() => setSelectedSpot(null)} />}
+      onClose={() => setSelectedSpotId(null)}
+      />}
 
       {userPosition && <Marker position={userPosition} icon={customIcon} />}
+      {clickedPosition && <Marker position={clickedPosition} icon={customIcon} />}
 
       {data.map((spot: Spot) => {
         if (!spot.lat || !spot.lng) return null;
         return (
           <HoleMap
             spot={spot}
-            key={spot.id}
-            onClickSpot={(clickeSpot) => setSelectedSpot(clickeSpot)}
+            key={spot.id + '-' + (spot.status ?? "")}
+            onClickSpot={(s: Spot) => setSelectedSpotId(s.id)}
           />
         );
       })}
 
-      <MapClickHandler onMapClick={onMapClick} isMarking={isMarking} />
+      <MapClickHandler onMapClick={onMapClick} isMarking={isMarking} setClickedLocation={setClickedPosition} />
     </MapContainer>
   );
 };
