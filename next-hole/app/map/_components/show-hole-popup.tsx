@@ -59,7 +59,6 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isEditHoleOpen, setIsEditHoleOpen] = useState(false);
-  const [newData, setNewData] = useState<Spot>(data);
 
   useEffect(() => {
     isShowPopupOpen(true);
@@ -104,8 +103,6 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
 
   const handleEditHole = async (formData: FormData) => {
     try {
-
-      const newStatus = formData.get("status") as string;
 
       const response = await axios.put(`/api/holes?id=${data.id}`, formData, {
         headers: {

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import AddHoleButton from "./_components/add-hole-button";
 import AddHolePopup from "./_components/add-hole-popup";
 import axios from "axios";
 import { fetchHoles } from "../_utils/fetchHoles";
 import { toast } from "@/hooks/use-toast";
+import { Spot } from "@/types/Spot";
 
 const RealtimeLocation = dynamic(
   () => import("./_components/real-time-location"),
@@ -24,7 +25,7 @@ const MapPage = () => {
   const [isMarking, setIsMarking] = useState(false);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [isEditPopupOpen, isShowPopupOpen] = useState(false);
-  const [getSpotHoles, setGetSpotHoles] = useState<any[]>([]);
+  const [getSpotHoles, setGetSpotHoles] = useState<Spot[]>([]);
   const [refresh, setRefresh] = useState(0);
   const [holeData, setHoleData] = useState<HoleDataProps>({
     lat: 0,
@@ -55,7 +56,7 @@ const MapPage = () => {
         const dataDb = await fetchHoles();
         setGetSpotHoles(dataDb);
       } catch (error) {
-        console.error("Erro ao realizar a busca de dados no /api");
+        console.error("Erro ao realizar a busca de dados no /api", error);
       }
     };
 

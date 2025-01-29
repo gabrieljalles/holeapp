@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 }
 
 //GET ALL
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const response = await fetch("http://localhost:3001/spothole");
 
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
 }
 
 // DELETE ONE
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -68,13 +68,13 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       { message: "Buraco deletado com sucesso!", data: response.data },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erro ao deletar buraco:", error);
 
-    if (error.response) {
+    if (axios.isAxiosError(error)) {
       return NextResponse.json(
-        { message: error.response.data.message || "Erro ao deletar o buraco!" },
-        { status: error.response.status || 500 }
+        { message: error.response?.data?.message || "Erro ao deletar o buraco!" },
+        { status: error.response?.status || 500 }
       );
     }
 

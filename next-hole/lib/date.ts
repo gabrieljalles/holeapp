@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { differenceInDays } from "date-fns";
 
 export function formatMyDate(dateString: string | Date) {
   const dateObj =

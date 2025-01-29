@@ -1,6 +1,8 @@
-export const fetchHoles = async (): Promise<any[]> => {
+import { Spot } from "@/types/Spot";
+
+export const fetchHoles = async (): Promise<Spot[]> => {
     try {
-      //CUIDADO COM O NO-CACHE
+
       const response = await fetch("/api/holes",{cache: 'no-cache'});
   
       if (!response.ok) {

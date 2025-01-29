@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FaClipboard, FaCog, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 interface AddHoleButtonProps {
   onActivate: () => void;

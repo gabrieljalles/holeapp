@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import L from "leaflet";
 import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
@@ -26,11 +26,19 @@ const customIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+type MapClickHandlerType = (coords: { lat: number; lng: number }) => void;
+
+interface MapClickHandlerProps{
+  onMapClick: MapClickHandlerType;
+  isMarking: boolean;
+  setClickedLocation : Dispatch<SetStateAction<[number, number] | null>>;
+}
+
 const MapClickHandler = ({
   onMapClick,
   isMarking,
   setClickedLocation,
-}: any) => {
+}: MapClickHandlerProps) => {
   useMapEvents({
     click: (e) => {
       if (isMarking) {
@@ -38,7 +46,7 @@ const MapClickHandler = ({
         onMapClick({ lat, lng });
         setClickedLocation([lat, lng]);
       }else{
-        setClickedLocation();
+        setClickedLocation(null);
       }
 
 

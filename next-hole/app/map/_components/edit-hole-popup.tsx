@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Combobox from "@/components/combobox";
 import { Spot } from "@/types/Spot";
 import { Input } from "@/components/ui/input";
@@ -45,14 +45,18 @@ const EditHolePopup = ({ data, onClose, onRefresh, onEditHole}: EditHolePopupPro
   const [imgAfterWork, setImgAfterWork] = useState<File | null>(null);
   const [fixedAt, setFixedAt] = useState(data.fixedAt || null);
 
-  useEffect(() => {
-    if (status == "Reparado" && !data.imgAfterWorkPath) {
-      setFixedAt(new Date().toISOString());
-    } else {
-      setFixedAt(null);
-      setImgAfterWork(null);
+  const fixedAtMemo = useMemo(() => {
+    if (status === "Reparado" && !data.imgAfterWorkPath){
+      return new Date().toISOString();
     }
-  }, [status]);
+    return null;
+  },[status, data.imgAfterWorkPath]);
+
+  useEffect(() => {
+    setFixedAt(fixedAtMemo);
+    if(!fixedAtMemo){
+      setImgAfterWork(null);
+    }},[fixedAtMemo]);
 
   const handleSave = async () => {
     if (status === "Reparado" && !data.imgAfterWorkPath) {
