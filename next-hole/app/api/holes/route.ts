@@ -1,12 +1,14 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
+const routeBackend = "https://backend-holeapp-nest.onrender.com/spothole";
+
 //POST Line
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
 
-    const response = await fetch("http://localhost:3001/spothole", {
+    const response = await fetch(routeBackend, {
       method: "POST",
       body: formData,
     });
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
 //GET ALL
 export async function GET() {
   try {
-    const response = await fetch("http://localhost:3001/spothole");
+    const response = await fetch(routeBackend);
 
     if (!response.ok) {
       throw new Error(
@@ -62,7 +64,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const response = await axios.delete(`http://localhost:3001/spothole/${id}`);
+    const response = await axios.delete(`${routeBackend}/${id}`);
 
     return NextResponse.json(
       { message: "Buraco deletado com sucesso!", data: response.data },
@@ -73,7 +75,9 @@ export async function DELETE(req: NextRequest) {
 
     if (axios.isAxiosError(error)) {
       return NextResponse.json(
-        { message: error.response?.data?.message || "Erro ao deletar o buraco!" },
+        {
+          message: error.response?.data?.message || "Erro ao deletar o buraco!",
+        },
         { status: error.response?.status || 500 }
       );
     }
