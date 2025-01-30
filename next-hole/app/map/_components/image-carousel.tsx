@@ -1,17 +1,22 @@
-import {useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
-interface ImageCarouselProps{
-    imgBeforeWorkPath : string;
-    imgAfterWorkPath : string;
+interface ImageCarouselProps {
+  imgBeforeWorkPath: string;
+  imgAfterWorkPath: string;
 }
 
-const ImageCarousel = ({ imgBeforeWorkPath, imgAfterWorkPath }:ImageCarouselProps) => {
+const ImageCarousel = ({
+  imgBeforeWorkPath,
+  imgAfterWorkPath,
+}: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = [
-    imgBeforeWorkPath && `http://localhost:3001/${imgBeforeWorkPath}`,
-    imgAfterWorkPath && `http://localhost:3001/${imgAfterWorkPath}`,
+    imgBeforeWorkPath &&
+      `https://backend-holeapp-nest.onrender.com/${imgBeforeWorkPath}`,
+    imgAfterWorkPath &&
+      `https://backend-holeapp-nest.onrender.com/${imgAfterWorkPath}`,
   ].filter(Boolean);
 
   const handleNext = () => {

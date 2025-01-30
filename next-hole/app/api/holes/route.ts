@@ -1,7 +1,8 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-const routeBackend = "https://backend-holeapp-nest.onrender.com/spothole";
+export const routeBackend =
+  "https://backend-holeapp-nest.onrender.com/spothole";
 
 //POST Line
 export async function POST(req: NextRequest) {
