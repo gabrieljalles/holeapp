@@ -42,7 +42,7 @@ export class SpotHoleService {
       address: '',
       number: '',
 
-      imgBeforeWorkPath: imgBeforeWork.path || null,
+      imgBeforeWorkPath: imgBeforeWork.path ? imgBeforeWork.path.replace(/\\/g, '/') : null,
       imgAfterWorkPath: null,
       ...addressData,
     };
