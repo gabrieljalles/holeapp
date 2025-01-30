@@ -6,7 +6,7 @@ const nextConfig = {
         protocol: "http",
         port: "3001",
         hostname: "localhost",
-        pathname: "/uploads/**",
+        pathname: "/spothole/uploads/**",
       },
     ],
   },

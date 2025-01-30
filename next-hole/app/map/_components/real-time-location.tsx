@@ -92,7 +92,7 @@ const RealtimeLocation = ({
       (err) => {
         console.error("Error getting location:", err);
       },
-      { enableHighAccuracy: true, maximumAge: 10000 }
+      { enableHighAccuracy: true, maximumAge: 1000 }
     );
 
     return () => {

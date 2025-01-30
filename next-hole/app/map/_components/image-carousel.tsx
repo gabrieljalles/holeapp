@@ -11,12 +11,13 @@ const ImageCarousel = ({
   imgAfterWorkPath,
 }: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  
 
   const images = [
     imgBeforeWorkPath &&
-      `https://backend-holeapp-nest.onrender.com/${imgBeforeWorkPath}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/spothole/${imgBeforeWorkPath}`,
     imgAfterWorkPath &&
-      `https://backend-holeapp-nest.onrender.com/${imgAfterWorkPath}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/spothole/${imgAfterWorkPath}`,
   ].filter(Boolean);
 
   const handleNext = () => {

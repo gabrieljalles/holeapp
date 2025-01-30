@@ -1,3 +1,12 @@
+# Iniciar o projeto : 
+
+nest :npm run dev
+next :npm run dev
+
+# Verificar o .ENV:
+
+NEXT_PUBLIC_API_URL=
+
 # O que deve ser feito?
 
 Alterar o next.config.mjs para o novo domínio, quando o next for para o domínio publico junto com o backend
@@ -9,3 +18,4 @@ Diminuir o tamanho das imagens
 // Falta consertar o setclickedlocation
 
 //Estou puxando uma rota direta do backend para adquirir uma imagem. Acho que não faz tanto sentido, é melhor que eu crie uma rota no front para usar a imagem depois.
+// NEST JS já trata erros, provavelmente não precisa usar trycatch. Confirmar depois

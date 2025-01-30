@@ -11,7 +11,7 @@ import { join } from 'path';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
+      serveRoot: '/spothole/uploads',
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,

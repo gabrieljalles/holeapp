@@ -81,7 +81,7 @@ const MapPage = () => {
     }
 
     try {
-      const response = await axios.post("api/holes", formData, {
+      const response = await axios.post("api/spothole", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

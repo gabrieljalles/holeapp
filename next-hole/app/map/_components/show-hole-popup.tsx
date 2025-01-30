@@ -73,7 +73,7 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
     const id = data.id;
 
     try{
-      const response = await axios.delete(`/api/holes`, {
+      const response = await axios.delete(`/api/spothole`, {
         params: { id },
       });
 
@@ -104,7 +104,7 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
   const handleEditHole = async (formData: FormData) => {
     try {
 
-      const response = await axios.put(`/api/holes?id=${data.id}`, formData, {
+      const response = await axios.put(`/api/spothole?id=${data.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -18,7 +18,7 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
   const center: LatLngExpression = [spot.lat, spot.lng];
 
   const color = spot.status === "Reparado"? "green": spot.status === "Em manutenção" ? "orange" : "red";
-  console.log("spot:", spot.id, spot.status);
+  
   return (
     <React.Fragment key={spot.id}>
       <Circle

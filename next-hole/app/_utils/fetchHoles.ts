@@ -3,7 +3,7 @@ import { Spot } from "@/types/Spot";
 export const fetchHoles = async (): Promise<Spot[]> => {
     try {
 
-      const response = await fetch("/api/holes",{cache: 'no-cache'});
+      const response = await fetch("/api/spothole",{cache: 'no-cache'});
   
       if (!response.ok) {
         throw new Error("Erro ao buscar buracos");
