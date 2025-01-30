@@ -104,15 +104,11 @@ export async function PUT(req: NextRequest) {
 
     const formData = await req.formData();
 
-    const response = await axios.put(
-      `http://localhost:3001/spothole/${id}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axios.put(`${routeBackend}/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return NextResponse.json(response.data, { status: 200 });
   } catch (error) {
     console.error("Erro ao atualizar o registro:", error);
