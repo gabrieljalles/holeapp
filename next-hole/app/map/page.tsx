@@ -19,6 +19,8 @@ interface HoleDataProps {
   lng: number;
   imgBeforeWork: File | null;
   observation: string;
+  vereador?: Boolean;
+  simSystem?: Boolean;
 }
 
 const MapPage = () => {
@@ -32,6 +34,8 @@ const MapPage = () => {
     lng: 0,
     imgBeforeWork: null,
     observation: "",
+    vereador: false,
+    simSystem: false,
   });
 
   const handleActivateMarking = () => {
@@ -73,10 +77,10 @@ const MapPage = () => {
     formData.append("lat", holeData.lat.toString());
     formData.append("lng", holeData.lng.toString());
     formData.append("observation", data.observation);
+    formData.append("vereador", data.vereador  === true ? "true" : "false");
+    formData.append("simSystem", data.simSystem === true ? "true" : "false");
 
-    if (!data.imgBeforeWork) {
-      return;
-    } else {
+    if (data.imgBeforeWork) {
       formData.append("imgBeforeWork", data.imgBeforeWork);
     }
 
@@ -105,7 +109,6 @@ const MapPage = () => {
       />
       
       <AddHoleButton isVisible={!showAddPopup && !isEditPopupOpen} onActivate={handleActivateMarking} />
-      
       
       <AddHolePopup
         isVisible={showAddPopup}

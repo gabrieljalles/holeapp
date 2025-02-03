@@ -5,6 +5,7 @@ import { Prisma, SpotHole } from '@prisma/client';
 import { NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 import * as path from 'path';
+import { CreateSpotHoleDto } from './dto/create-spothole.dto';
 
 @Injectable()
 export class SpotHoleService {
@@ -16,14 +17,11 @@ export class SpotHoleService {
   }
 
   // >>>>
-  async create(data: {
-    lat: number;
-    lng: number;
-    imgBeforeWork: Express.Multer.File;
-    observation: string;
-  }) {
-    const { lat, lng, imgBeforeWork, observation } = data;
-
+  async create(data: CreateSpotHoleDto & {
+    imgBeforeWork?: Express.Multer.File
+  }){
+    const { lat, lng, imgBeforeWork, observation, vereador, simSystem } = data;
+    
     const addressData = await this.getAddressFromLatLng(lat, lng);
 
     const newSpotHole: Prisma.SpotHoleCreateInput = {
@@ -33,6 +31,8 @@ export class SpotHoleService {
       observation: observation || null,
       status: 'Em aberto',
       createdBy: 'Sistema',
+      vereador: typeof vereador === "string" ? (vereador === "true") : Boolean(vereador),
+      simSystem: typeof simSystem === "string" ? (simSystem === "true") : Boolean(simSystem),
       fixedBy: '',
       lat: Number(lat),
       lng: Number(lng),
@@ -42,8 +42,9 @@ export class SpotHoleService {
       address: '',
       number: '',
 
-      imgBeforeWorkPath: imgBeforeWork.path ? imgBeforeWork.path.replace(/\\/g, '/') : null,
+      imgBeforeWorkPath: imgBeforeWork ? imgBeforeWork.path.replace(/\\/g, '/') : null,
       imgAfterWorkPath: null,
+      
       ...addressData,
     };
 

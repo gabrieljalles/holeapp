@@ -16,15 +16,15 @@ interface HoleMapProps {
 
 const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
   const center: LatLngExpression = [spot.lat, spot.lng];
-
   const color = spot.status === "Reparado"? "green": spot.status === "Em manutenção" ? "orange" : "red";
-  
+  const borderColor = spot.vereador === true ? "black": color;
+
   return (
     <React.Fragment key={spot.id}>
       <Circle
         center={[spot.lat, spot.lng]}
         radius={20}
-        color={color}
+        color={borderColor}
         fillColor={color}
         fillOpacity={0.3}
         eventHandlers={{
@@ -35,8 +35,8 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
       <Circle
         center={center}
         radius={0.1}
-        color="black"
-        fillColor="black"
+        color= {color}
+        fillColor={color}
         fillOpacity={1}
         eventHandlers={{
           click: () => onClickSpot(spot),

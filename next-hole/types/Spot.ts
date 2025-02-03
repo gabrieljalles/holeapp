@@ -4,6 +4,8 @@ export interface Spot {
   lng: number;
   status: string;
   number: string;
+  vereador: boolean;
+  simSystem: boolean;
   observation: string;
   address: string;
   cep: string;

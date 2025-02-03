@@ -15,6 +15,7 @@ import {
 import {FileFieldsInterceptor, FileInterceptor} from '@nestjs/platform-express';
 import { multerOptions } from 'src/shared/multer.config';
 import { SpotHoleService } from './spothole.service';
+import { CreateSpotHoleDto } from './dto/create-spothole.dto';
 
 @Controller('spothole')
 export class SpotHoleController {
@@ -84,16 +85,12 @@ export class SpotHoleController {
   ){
 
     try {
-      // Captura o arquivo de "antes do trabalho", se existir
       const beforeFile = files?.imgBeforeWork?.[0];
-      // Captura o arquivo de "depois do trabalho", se existir
       const afterFile = files?.imgAfterWork?.[0];
   
-      // Se veio um arquivo para "antes", atualiza o campo
       if (beforeFile) {
         updateData.imgBeforeWorkPath = beforeFile.path;
       }
-      // Se veio um arquivo para "depois", atualiza o campo
       if (afterFile) {
         updateData.imgAfterWorkPath = afterFile.path;
       }
@@ -112,25 +109,27 @@ export class SpotHoleController {
   @Post()
   @UseInterceptors(FileInterceptor('imgBeforeWork', multerOptions))
   async create(
-    @Body()
-    body: {
-      lat: number;
-      lng: number;
-      observation: string;
-    },
-    @UploadedFile() imgBeforeWork: Express.Multer.File,
+    @Body() body: CreateSpotHoleDto,
+    @UploadedFile() imgBeforeWork?: Express.Multer.File,
   ) {
-    const { lat, lng, observation } = body;
-    
-    if (!lat || !lng || !imgBeforeWork) {
+    const { lat, lng, observation, vereador, simSystem } = body;
+
+    if (!lat || !lng) {
       throw new HttpException(
-        'Latitude, longitude e a imagem são obrigatórios',
+        'Latitude, longitude são obrigatórios',
         HttpStatus.BAD_REQUEST,
       );
     }
 
+    if (!imgBeforeWork && !(vereador || simSystem)){
+      throw new HttpException(
+        'Só é permitido não enviar imagem se o buraco for do um pedido de vereador ou do sistema SIM',
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
     try {
-      return await this.spotHoleService.create({ lat, lng, imgBeforeWork, observation });
+      return await this.spotHoleService.create({ lat, lng, imgBeforeWork, observation , vereador, simSystem });
     } catch (error) {
       console.log(error);
       throw new HttpException(
