@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import dynamic from "next/dynamic";
 import { useMap, useMapEvents } from "react-leaflet";
@@ -73,7 +73,7 @@ const RealtimeLocation = ({
     null
   );
   const [addressPosition, setAddressPosition] = useState<[number, number]|null >(null)
-
+  const [showChangeView, setShowChangeView] = useState(false);
   const [positionZoom, setPositionZoom] = useState<number>(13);
   const [address, setAddress] = useState("");
   const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(
@@ -83,15 +83,22 @@ const RealtimeLocation = ({
 
   const selectedSpot = selectedSpotId ? data.find((s) => s.id === selectedSpotId):null;
 
-  const ChangeView = ({center, zoom}: {center: [number,number] | null; zoom: number}) => {
+  const ChangeView = ({center, zoom, onReset}: {center: [number,number] | null; zoom: number; onReset: () => void}) => {
 
     const map = useMap();
+    const hasUpdated = useRef(false);
 
-    if(center){
-      map.setView(center, zoom);
+    useEffect(()=> {
+      if(center && !hasUpdated.current){
+        map.setView(center, zoom);
+
+        setTimeout(() => {
+          onReset();
+        }, 1000);
+      }
+    },[center, zoom, map, onReset])
+
       return null;
-    }
-    
   }
 
   //Pesquisa o endereço.
@@ -109,6 +116,7 @@ const RealtimeLocation = ({
       setAddressPosition([parseFloat(lat), parseFloat(lon)])
       setPositionZoom(20);
       setAddress('');
+      setShowChangeView(true);
     }else{
       alert("Endereço não encontrado!")
     }
@@ -148,8 +156,10 @@ const RealtimeLocation = ({
       key="realtime-map"
     >
 
-      <ChangeView center={addressPosition} zoom={positionZoom} />
-
+      {showChangeView && (
+        <ChangeView center={addressPosition} zoom={positionZoom} onReset={() => setShowChangeView(false)} />
+      )}
+      
       <SearchComponent address={address} setAddress={setAddress} searchLocation={searchLocation} />
 
       <TileLayer
