@@ -16,8 +16,8 @@ model SpotHole{
   status String
   createdBy String?
   fixedBy String?
-  vereador Boolean?
-  simSystem Boolean?
+  vereador Boolean
+  simSystem Boolean
   lat Float
   lng Float
   zone String?
