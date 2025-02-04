@@ -2,10 +2,11 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import L from "leaflet";
 import dynamic from "next/dynamic";
-import { useMapEvents } from "react-leaflet";
+import { useMap, useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
 import ShowHolePopup from "./show-hole-popup";
 import {Spot} from '@/types/Spot';
+import SearchComponent from "./search-component";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -71,12 +72,47 @@ const RealtimeLocation = ({
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
+  const [addressPosition, setAddressPosition] = useState<[number, number]|null >(null)
+
+  const [positionZoom, setPositionZoom] = useState<number>(13);
+  const [address, setAddress] = useState("");
   const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(
     null
   );
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
 
   const selectedSpot = selectedSpotId ? data.find((s) => s.id === selectedSpotId):null;
+
+  const ChangeView = ({center, zoom}: {center: [number,number] | null; zoom: number}) => {
+
+    const map = useMap();
+
+    if(center){
+      map.setView(center, zoom);
+      return null;
+    }
+    
+  }
+
+  //Pesquisa o endereço.
+  const searchLocation = async() => {
+    if (!address) return;
+
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ", Uberlândia, MG, Brasil")}&viewbox=-48.3809,-18.8400,-47.9009,-19.2400&bounded=1`
+    );
+
+    const data = await response.json();
+
+    if(data.length > 0 ){
+      const {lat, lon} = data[0];
+      setAddressPosition([parseFloat(lat), parseFloat(lon)])
+      setPositionZoom(20);
+      setAddress('');
+    }else{
+      alert("Endereço não encontrado!")
+    }
+  }
  
   useEffect(() => {
     if (!navigator.geolocation || typeof window === "undefined") {
@@ -107,10 +143,15 @@ const RealtimeLocation = ({
   return (
     <MapContainer
       center={userPosition}
-      zoom={14}
+      zoom={positionZoom}
       style={{ height: "100vh", width: "100%", zIndex: "0" }}
       key="realtime-map"
     >
+
+      <ChangeView center={addressPosition} zoom={positionZoom} />
+
+      <SearchComponent address={address} setAddress={setAddress} searchLocation={searchLocation} />
+
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

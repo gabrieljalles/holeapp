@@ -19,8 +19,8 @@ interface HoleDataProps {
   lng: number;
   imgBeforeWork: File | null;
   observation: string;
-  vereador?: Boolean;
-  simSystem?: Boolean;
+  vereador?: boolean;
+  simSystem?: boolean;
 }
 
 const MapPage = () => {
@@ -100,6 +100,9 @@ const MapPage = () => {
 
   return (
     <div className="relative w-full h-full">
+      
+      
+
       <RealtimeLocation
         isMarking={isMarking}
         isShowPopupOpen = {isShowPopupOpen}
