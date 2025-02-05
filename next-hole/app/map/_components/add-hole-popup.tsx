@@ -57,15 +57,17 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
   };
 
   const handleFormSubmit = () => {
-    //Conferência do formulário
-    if (!formData.imgBeforeWork && !(formData.simSystem || formData.vereador)) {
-      toast({
-        variant: "destructive",
-        title: "Erro ao enviar os dados!",
-        description: "Registro de buracos sem fotos só são permitidos para buracos recebidos pelo SIM ou Buracos enviados por Vereadores",
-      });
-      return;
-    }
+
+    
+    // //Conferência do formulário
+    // if (!formData.imgBeforeWork && !(formData.simSystem || formData.vereador)) {
+    //   toast({
+    //     variant: "destructive",
+    //     title: "Erro ao enviar os dados!",
+    //     description: "Registro de buracos sem fotos só são permitidos para buracos recebidos pelo SIM ou Buracos enviados por Vereadores",
+    //   });
+    //   return;
+    // }
 
     //Envio para formulário
     onSubmit(formData);
