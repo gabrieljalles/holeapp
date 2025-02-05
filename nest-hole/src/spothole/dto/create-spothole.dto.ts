@@ -28,4 +28,13 @@ export class CreateSpotHoleDto {
   }) 
   @IsBoolean()
   simSystem: boolean;
+
+  @Transform(({ value }) => {
+    if(typeof value === 'string'){
+      return value.trim().toLowerCase() === 'true';
+    }
+    return Boolean(value);
+  }) 
+  @IsBoolean()
+  bigHole: boolean;
 }

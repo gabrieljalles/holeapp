@@ -8,6 +8,9 @@ const nextConfig = {
         hostname: process.env.NEXT_PUBLIC_IMAGE_HOSTNAME || "backend-holeapp-nest.onrender.com",
         pathname: process.env.NEXT_PUBLIC_IMAGE_PATHNAME || "/spothole/uploads/**",
       },
+      {
+        hostname: "utfs.io",
+      }
     ],
   },
 };

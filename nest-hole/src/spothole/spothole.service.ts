@@ -20,7 +20,7 @@ export class SpotHoleService {
   async create(data: CreateSpotHoleDto & {
     imgBeforeWork?: Express.Multer.File
   }){
-    const { lat, lng, imgBeforeWork, observation, vereador, simSystem } = data;
+    const { lat, lng, imgBeforeWork, observation, vereador, simSystem, bigHole } = data;
     
     const addressData = await this.getAddressFromLatLng(lat, lng);
 
@@ -33,6 +33,7 @@ export class SpotHoleService {
       createdBy: 'Sistema',
       vereador: typeof vereador === "string" ? (vereador === "true") : Boolean(vereador),
       simSystem: typeof simSystem === "string" ? (simSystem === "true") : Boolean(simSystem),
+      bigHole: typeof bigHole === "string" ? (bigHole === "true") : Boolean(bigHole),
       fixedBy: '',
       lat: Number(lat),
       lng: Number(lng),

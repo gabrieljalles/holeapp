@@ -21,6 +21,7 @@ interface HoleDataProps {
   observation: string;
   vereador?: boolean;
   simSystem?: boolean;
+  bigHole?: boolean;
 }
 
 const MapPage = () => {
@@ -36,6 +37,7 @@ const MapPage = () => {
     observation: "",
     vereador: false,
     simSystem: false,
+    bigHole: false,
   });
 
   const handleActivateMarking = () => {
@@ -79,6 +81,7 @@ const MapPage = () => {
     formData.append("observation", data.observation);
     formData.append("vereador", data.vereador  === true ? "true" : "false");
     formData.append("simSystem", data.simSystem === true ? "true" : "false");
+    formData.append("bigHole", data.bigHole === true ? "true": "false");
 
     if (data.imgBeforeWork) {
       formData.append("imgBeforeWork", data.imgBeforeWork);

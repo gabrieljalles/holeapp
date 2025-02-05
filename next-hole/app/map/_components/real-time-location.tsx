@@ -8,6 +8,24 @@ import ShowHolePopup from "./show-hole-popup";
 import {Spot} from '@/types/Spot';
 import SearchComponent from "./search-component";
 
+const userIcon = new L.Icon({
+  iconUrl: "https://utfs.io/f/tHigeRwX8lT22IEBsX0EmJpcSR49A5YXWy7w3iFqjvf0oDlQ",
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+});
+
+const addressIcon = new L.Icon({
+  iconUrl: "https://utfs.io/f/tHigeRwX8lT2BmQgEFYokrWdDe1jQSFpZtMJ90cVnwqRHNTf",
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+});
+
+const holeIcon = new L.Icon({
+  iconUrl: "https://utfs.io/f/tHigeRwX8lT2BmQgEFYokrWdDe1jQSFpZtMJ90cVnwqRHNTf",
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+});
+
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -20,12 +38,7 @@ const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
   { ssr: false }
 );
-const customIcon = new L.Icon({
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
+
 
 type MapClickHandlerType = (coords: { lat: number; lng: number }) => void;
 
@@ -165,6 +178,7 @@ const RealtimeLocation = ({
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        
       />
 
       {selectedSpot && 
@@ -176,8 +190,9 @@ const RealtimeLocation = ({
       onClose={() => setSelectedSpotId(null)}
       />}
 
-      {userPosition && <Marker position={userPosition} icon={customIcon} />}
-      {clickedPosition && <Marker position={clickedPosition} icon={customIcon} />}
+      {addressPosition && <Marker position={addressPosition}  icon={addressIcon}/>}
+      {userPosition && <Marker position={userPosition} icon={userIcon} />}
+      {clickedPosition && <Marker position={clickedPosition} icon={holeIcon} />}
 
       {data.map((spot: Spot) => {
         if (!spot.lat || !spot.lng) return null;

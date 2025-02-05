@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { FaLaptopCode, FaUserTie } from "react-icons/fa";
 import { MdPhotoCamera } from "react-icons/md";
 import { RiPencilFill } from "react-icons/ri";
+import { GiHole } from "react-icons/gi";
 
 interface PopupFormData {
   lat: number;
@@ -15,6 +16,7 @@ interface PopupFormData {
   verador?: boolean;
   simSystem?: boolean;
   observation: string;
+  bigHole?: boolean;
 }
 
 interface AddHolePopupProps {
@@ -31,6 +33,7 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
     observation: "",
     vereador: false,
     simSystem: false,
+    bigHole: false,
   });
 
   const handleInputChange = (
@@ -79,7 +82,7 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
     });
 
     //Reset do formulário
-    setFormData({ imgBeforeWork: null, observation: "", lat: 0, lng: 0, vereador: false, simSystem: false });
+    setFormData({ imgBeforeWork: null, observation: "", lat: 0, lng: 0, vereador: false, simSystem: false, bigHole: false });
     onClose();
   };
 
@@ -94,22 +97,40 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
 
         <div className="mb-2 flex flex-col">
           <div className="flex gap-2 mb-1">
-          <input
-            className="w-4"
-            type="checkbox"
-            name="vereador"
-            id="vereador"
-            checked={!!formData.vereador}
-            onChange={handleCheckboxChange}
-          />
-          <Label
-            htmlFor="vereador"
-            className=" mr-2 flex gap-1 items-center text-sm font-medium"
-          >
-            <FaUserTie size={16} />
-            Pedido de verador
-          </Label>
+            <input
+              className="w-4"
+              type="checkbox"
+              name="vereador"
+              id="vereador"
+              checked={!!formData.vereador}
+              onChange={handleCheckboxChange}
+            />
+            <Label
+              htmlFor="vereador"
+              className=" mr-2 flex gap-1 items-center text-sm font-medium"
+            >
+              <FaUserTie size={16} />
+              Pedido de verador
+            </Label>
           
+          </div>
+
+          <div className="flex gap-2 mb-1">
+            <input
+              className="w-4"
+              type="checkbox"
+              name="bigHole"
+              id="bigHole"
+              checked={!!formData.bigHole}
+              onChange={handleCheckboxChange}
+            />
+            <Label
+              htmlFor="bigHole"
+              className=" mr-2 flex gap-1 items-center text-sm font-medium"
+            >
+              <GiHole size={16} />
+              Buraco grande
+            </Label>
           </div>
 
           <div className="flex gap-2 mb-1">

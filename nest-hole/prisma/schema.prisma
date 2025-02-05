@@ -16,6 +16,7 @@ model SpotHole{
   status String
   createdBy String?
   fixedBy String?
+  bigHole Boolean
   vereador Boolean
   simSystem Boolean
   lat Float

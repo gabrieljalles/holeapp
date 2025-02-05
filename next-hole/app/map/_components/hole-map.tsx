@@ -18,12 +18,15 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
   const center: LatLngExpression = [spot.lat, spot.lng];
   const color = spot.status === "Reparado"? "green": spot.status === "Em manutenção" ? "orange" : "red";
   const borderColor = spot.vereador === true ? "black": color;
+  const pointColor = spot.bigHole === true ? "purple":"black";
+  const size = spot.bigHole === true ? 40 : 20;
+  
 
   return (
     <React.Fragment key={spot.id}>
       <Circle
         center={[spot.lat, spot.lng]}
-        radius={20}
+        radius={size}
         color={borderColor}
         fillColor={color}
         fillOpacity={0.3}
@@ -34,8 +37,8 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
 
       <Circle
         center={center}
-        radius={0.1}
-        color= {color}
+        radius={spot.bigHole === true ? 5 : 0.1}
+        color= {pointColor}
         fillColor={color}
         fillOpacity={1}
         eventHandlers={{
