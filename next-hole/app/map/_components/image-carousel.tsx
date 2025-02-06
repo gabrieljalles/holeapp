@@ -11,7 +11,6 @@ const ImageCarousel = ({
   imgAfterWorkPath,
 }: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  
 
   const images = [
     imgBeforeWorkPath &&
@@ -38,7 +37,7 @@ const ImageCarousel = ({
             src={images[currentIndex]}
             alt={`Imagem ${currentIndex + 1}`}
             fill
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "contain" }}
           />
           {/* Botão Anterior */}
           <button
