@@ -22,6 +22,7 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
       : spot.status === "Em manutenção"
       ? "orange"
       : "red";
+  
   const borderColor = spot.vereador === true ? "black" : color;
   const pointColor = spot.bigHole === true ? "purple" : "black";
   const size = spot.bigHole === true ? 9 : 5;
