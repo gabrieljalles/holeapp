@@ -1,12 +1,16 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import L from "leaflet";
 import dynamic from "next/dynamic";
-import { useMap, useMapEvents } from "react-leaflet";
+import {useMapEvents } from "react-leaflet";
 import HoleMap from "./hole-map";
 import ShowHolePopup from "./show-hole-popup";
 import {Spot} from '@/types/Spot';
 import SearchComponent from "./search-component";
+import MenuMapDropdownButton from "./menu-map-dropdown-button";
+import { useMapContext } from './MapContext';
+
+import ChangeView from "../_functions/change-view";
 
 const userIcon = new L.Icon({
   iconUrl: "https://utfs.io/f/tHigeRwX8lT22IEBsX0EmJpcSR49A5YXWy7w3iFqjvf0oDlQ",
@@ -82,12 +86,13 @@ const RealtimeLocation = ({
   isShowPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onRefresh: () => void;
 }) => {
+  const { followUser , zoomPosition, setZoomPosition } = useMapContext();
+
+
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
   const [addressPosition, setAddressPosition] = useState<[number, number]|null >(null)
-  const [showChangeView, setShowChangeView] = useState(false);
-  const [positionZoom, setPositionZoom] = useState<number>(13);
   const [address, setAddress] = useState("");
   const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(
     null
@@ -96,25 +101,6 @@ const RealtimeLocation = ({
 
   const selectedSpot = selectedSpotId ? data.find((s) => s.id === selectedSpotId):null;
 
-  const ChangeView = ({center, zoom, onReset}: {center: [number,number] | null; zoom: number; onReset: () => void}) => {
-
-    const map = useMap();
-    const hasUpdated = useRef(false);
-
-    useEffect(()=> {
-      if(center && !hasUpdated.current){
-        map.setView(center, zoom);
-
-        setTimeout(() => {
-          onReset();
-        }, 1000);
-      }
-    },[center, zoom, map, onReset])
-
-      return null;
-  }
-
-  //Pesquisa o endereço.
   const searchLocation = async() => {
     if (!address) return;
 
@@ -127,9 +113,8 @@ const RealtimeLocation = ({
     if(data.length > 0 ){
       const {lat, lon} = data[0];
       setAddressPosition([parseFloat(lat), parseFloat(lon)])
-      setPositionZoom(20);
+      setZoomPosition(19);
       setAddress('');
-      setShowChangeView(true);
     }else{
       alert("Endereço não encontrado!")
     }
@@ -164,21 +149,30 @@ const RealtimeLocation = ({
   return (
     <MapContainer
       center={userPosition}
-      zoom={positionZoom}
+      zoom={zoomPosition}
       style={{ height: "100vh", width: "100%", zIndex: "0" }}
+      maxZoom = {21}
       key="realtime-map"
     >
-
-      {showChangeView && (
-        <ChangeView center={addressPosition} zoom={positionZoom} onReset={() => setShowChangeView(false)} />
-      )}
+      {
+      (followUser || addressPosition) && (
+        <ChangeView center ={followUser ? userPosition : addressPosition} zoom={zoomPosition}/>
+      )
+      }
       
-      <SearchComponent address={address} setAddress={setAddress} searchLocation={searchLocation} />
+      <div className="absolute top-4  left-1/2 transform -translate-x-1/2  min-w-[280px] p-2 h-16 z-[1000] flex gap-2 items-center">
+        <MenuMapDropdownButton />
+        {!followUser &&(
+          <SearchComponent address={address} setAddress={setAddress} searchLocation={searchLocation} />
+        )}
+        
+      </div>
 
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        
+        maxZoom={21}
+        maxNativeZoom={21}
       />
 
       {selectedSpot && 

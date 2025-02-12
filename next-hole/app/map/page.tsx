@@ -8,6 +8,7 @@ import axios from "axios";
 import { fetchHoles } from "../_utils/fetchHoles";
 import { toast } from "@/hooks/use-toast";
 import { Spot } from "@/types/Spot";
+import {MapProvider} from './_components/MapContext';
 
 const RealtimeLocation = dynamic(
   () => import("./_components/real-time-location"),
@@ -103,16 +104,15 @@ const MapPage = () => {
 
   return (
     <div className="relative w-full h-full">
-      
-      
-
-      <RealtimeLocation
-        isMarking={isMarking}
-        isShowPopupOpen = {isShowPopupOpen}
-        onMapClick={handleMapClick}
-        data={getSpotHoles}
-        onRefresh = {handleRefresh}
-      />
+      <MapProvider>
+        <RealtimeLocation
+          isMarking={isMarking}
+          isShowPopupOpen = {isShowPopupOpen}
+          onMapClick={handleMapClick}
+          data={getSpotHoles}
+          onRefresh = {handleRefresh}
+        />
+      </MapProvider>
       
       <AddHoleButton isVisible={!showAddPopup && !isEditPopupOpen} onActivate={handleActivateMarking} />
       

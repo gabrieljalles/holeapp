@@ -25,7 +25,7 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
   
   const borderColor = spot.vereador === true ? "black" : color;
   const pointColor = spot.bigHole === true ? "purple" : "black";
-  const size = spot.bigHole === true ? 9 : 5;
+  const size = spot.bigHole === true ? 6 : 3;
 
   return (
     <React.Fragment key={spot.id}>
@@ -42,7 +42,7 @@ const HoleMap = ({ spot, onClickSpot }: HoleMapProps) => {
 
       <Circle
         center={center}
-        radius={spot.bigHole === true ? 2 : 1}
+        radius={spot.bigHole === true ? 2 : 0.1}
         color={pointColor}
         fillColor={color}
         fillOpacity={1}
