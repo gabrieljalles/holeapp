@@ -27,6 +27,7 @@ interface HoleDataProps {
 
 const MapPage = () => {
   const [isMarking, setIsMarking] = useState(false);
+  const [followUser, setFollowUser] = useState(false);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [isEditPopupOpen, isShowPopupOpen] = useState(false);
   const [getSpotHoles, setGetSpotHoles] = useState<Spot[]>([]);
@@ -52,7 +53,11 @@ const MapPage = () => {
 
   const handleMapClick = ({ lat, lng }: { lat: number; lng: number }) => {
     setHoleData({ ...holeData, lat, lng });
-    setIsMarking(false);
+    
+    if(!followUser){
+      setIsMarking(false);
+    }
+
     setShowAddPopup(true);
   };
 
@@ -104,7 +109,7 @@ const MapPage = () => {
 
   return (
     <div className="relative w-full h-full">
-      <MapProvider>
+      <MapProvider isMarking={isMarking} setIsMarking={setIsMarking} setFollowUser={setFollowUser} followUser={followUser}>
         <RealtimeLocation
           isMarking={isMarking}
           isShowPopupOpen = {isShowPopupOpen}
@@ -114,7 +119,7 @@ const MapPage = () => {
         />
       </MapProvider>
       
-      <AddHoleButton isVisible={!showAddPopup && !isEditPopupOpen} onActivate={handleActivateMarking} />
+      <AddHoleButton isVisible={!showAddPopup && !isEditPopupOpen && !isMarking} onActivate={handleActivateMarking} />
       
       <AddHolePopup
         isVisible={showAddPopup}

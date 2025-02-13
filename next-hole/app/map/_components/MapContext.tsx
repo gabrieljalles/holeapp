@@ -6,17 +6,25 @@ interface MapContextProps {
   setFollowUser: (value: boolean) => void;
   zoomPosition: number;
   setZoomPosition: (value: number) => void;
+  isMarking : boolean;
+  setIsMarking : (value: boolean) => void;
 }
 
 const MapContext = createContext<MapContextProps | undefined>(undefined);
 
-export const MapProvider = ({ children }: { children: ReactNode }) => {
-  const [followUser, setFollowUser] = useState(false);
+interface MapProviderprops {
+    children:ReactNode;
+    isMarking: boolean;
+    setIsMarking: (value: boolean) => void;
+    followUser: boolean;
+    setFollowUser: (value: boolean) => void;
+}
+
+export const MapProvider = ({ children, isMarking, setIsMarking, followUser, setFollowUser }: MapProviderprops) => {
   const [zoomPosition, setZoomPosition] = useState<number>(13);
 
-
   return (
-    <MapContext.Provider value={{ followUser, setFollowUser, zoomPosition, setZoomPosition }}>
+    <MapContext.Provider value={{ followUser, setFollowUser, zoomPosition, setZoomPosition, isMarking, setIsMarking }}>
       {children}
     </MapContext.Provider>
   );

@@ -3,12 +3,19 @@ import { Crosshair } from "lucide-react";
 import { useMapContext } from "./MapContext";
 
 const FixedMapDropdownAction = () => {
-    const {followUser, setFollowUser} = useMapContext();
-    const {zoomPosition, setZoomPosition} = useMapContext();
+    const {followUser, setFollowUser, zoomPosition, setZoomPosition, setIsMarking} = useMapContext();
+
 
     const handleClick = () => {
-        setFollowUser(!followUser);
+        const newState = !followUser;
+        setFollowUser(newState);
         setZoomPosition(zoomPosition === 13 ? 19 : 13)
+
+        if(newState){
+            setIsMarking(true);
+        }else{
+            setIsMarking(false);
+        }
     }
 
     return ( 

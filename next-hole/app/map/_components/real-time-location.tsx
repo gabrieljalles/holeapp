@@ -86,8 +86,8 @@ const RealtimeLocation = ({
   isShowPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onRefresh: () => void;
 }) => {
-  const { followUser , zoomPosition, setZoomPosition } = useMapContext();
 
+  const { followUser , zoomPosition, setZoomPosition } = useMapContext();
 
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
