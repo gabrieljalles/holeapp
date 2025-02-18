@@ -197,7 +197,6 @@ const EditHolePopup = ({ data, onClose, onRefresh, onEditHole}: EditHolePopupPro
                 type="file"
                 name="imgBeforeWork"
                 accept="image/*"
-                capture="environment"
                 onChange={(e) => {
                   const file = e.target.files?.[0] ?? null;
                   setImgBeforeWork(file);
@@ -219,7 +218,6 @@ const EditHolePopup = ({ data, onClose, onRefresh, onEditHole}: EditHolePopupPro
                   type="file"
                   name="imgAfterWork"
                   accept="image/*"
-                  capture="environment"
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
                     setImgAfterWork(file);
