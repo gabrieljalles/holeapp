@@ -16,6 +16,9 @@ import {FileFieldsInterceptor, FileInterceptor} from '@nestjs/platform-express';
 import { multerOptions } from 'src/shared/multer.config';
 import { SpotHoleService } from './spothole.service';
 import { CreateSpotHoleDto } from './dto/create-spothole.dto';
+import path, { join } from 'path';
+import * as fs from 'fs';
+import { processImage } from 'src/utils/image-processor.service';
 
 @Controller('spothole')
 export class SpotHoleController {
@@ -79,7 +82,7 @@ export class SpotHoleController {
     @Body() updateData:any,
     @UploadedFiles()
   files: {
-    imgBeforeWork?: Express.Multer.File[]; // FileFieldsInterceptor devolve arrays
+    imgBeforeWork?: Express.Multer.File[];
     imgAfterWork?: Express.Multer.File[];
   },
   ){
@@ -89,10 +92,16 @@ export class SpotHoleController {
       const afterFile = files?.imgAfterWork?.[0];
   
       if (beforeFile) {
-        updateData.imgBeforeWorkPath = beforeFile.path;
+        const processedBuffer = await processImage(beforeFile);
+        const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+        await fs.promises.writeFile(`./uploads/${filename}`, processedBuffer);
+        updateData.imgBeforeWorkPath = `uploads/${filename}`;
       }
       if (afterFile) {
-        updateData.imgAfterWorkPath = afterFile.path;
+        const processedBuffer = await processImage(afterFile);
+        const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+        await fs.promises.writeFile(`./uploads/${filename}`, processedBuffer);
+        updateData.imgAfterWorkPath = `uploads/${filename}`;
       }
   
       return await this.spotHoleService.update(id, updateData);
@@ -120,16 +129,18 @@ export class SpotHoleController {
         HttpStatus.BAD_REQUEST,
       );
     }
+    
+    let imgBeforeWorkPath: string | null = null;
 
-    if (!imgBeforeWork && !(vereador || simSystem)){
-      throw new HttpException(
-        'Só é permitido não enviar imagem se o buraco for do um pedido de vereador ou do sistema SIM',
-        HttpStatus.BAD_REQUEST,
-      )
+    if(imgBeforeWork){
+      const processedBuffer = await processImage(imgBeforeWork);
+      const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+      await fs.promises.writeFile(`./uploads/${filename}`, processedBuffer);
+      imgBeforeWorkPath = `uploads/${filename}`;
     }
 
     try {
-      return await this.spotHoleService.create({ lat, lng, imgBeforeWork, observation , vereador, simSystem, bigHole });
+      return await this.spotHoleService.create({ lat, lng, imgBeforeWorkPath, observation , vereador, simSystem, bigHole });
     } catch (error) {
       console.log(error);
       throw new HttpException(

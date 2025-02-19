@@ -32,3 +32,7 @@ NEXT_PUBLIC_IMAGE_PATHNAME=
 # O que deve ser feito?
 
 [ ] Depois de adicionar a feature de fixar o mapa no usuário, Criar isLoading para todos os botões que fazem ações diretamente ligadas ao banco como Apagar, editar, criar... Esse estado irá impedir que o usuário fique gerando erro sem necessidade.
+
+# Comentários para a projeto descritivo final:
+
+* Foram feitos alguns estudos de imagens e vemos que imagens comprimidas em 50 % da sua qualidade, não perderia tanto a qualidade quanto deixar ela em 100% da sua capacidade.

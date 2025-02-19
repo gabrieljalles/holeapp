@@ -1,20 +1,8 @@
 import { MulterModuleOptions } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { memoryStorage } from 'multer';
 
 export const multerOptions: MulterModuleOptions = {
-  storage: diskStorage({
-    destination: './uploads',
-    filename: (req, file, callback) => {
-
-      // Montar nome
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-
-      // Colocar a extensão como jpg
-      const newFilename = `${uniqueSuffix}${extname(file.originalname)}`;
-      callback(null, newFilename);
-    },
-  }),
+  storage: memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024,
   },

@@ -18,9 +18,9 @@ export class SpotHoleService {
 
   // >>>>
   async create(data: CreateSpotHoleDto & {
-    imgBeforeWork?: Express.Multer.File
+    imgBeforeWorkPath?: string | null;
   }){
-    const { lat, lng, imgBeforeWork, observation, vereador, simSystem, bigHole } = data;
+    const { lat, lng, imgBeforeWorkPath, observation, vereador, simSystem, bigHole } = data;
     
     const addressData = await this.getAddressFromLatLng(lat, lng);
 
@@ -43,7 +43,7 @@ export class SpotHoleService {
       address: '',
       number: '',
 
-      imgBeforeWorkPath: imgBeforeWork ? imgBeforeWork.path.replace(/\\/g, '/') : null,
+      imgBeforeWorkPath: imgBeforeWorkPath,
       imgAfterWorkPath: null,
       
       ...addressData,
