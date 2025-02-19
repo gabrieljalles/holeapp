@@ -1,13 +1,13 @@
 import { extname } from 'path';
-import imagemin from 'imagemin';
-import imageminMozjpeg from 'imagemin-mozjpeg';
-
-const pngToJpeg = require('png-to-jpeg');
-
+import * as pngToJpeg from 'png-to-jpeg';
 
 export async function processImage(
     file: Express.Multer.File
 ): Promise<Buffer> {
+    const imagemin = (await import('imagemin')).default;
+    const imageminMozjpeg = (await import('imagemin-mozjpeg')).default;
+
+    
     const extension = extname(file.originalname).toLowerCase();
     const quality = 50;
 
