@@ -94,14 +94,14 @@ export class SpotHoleController {
       if (beforeFile) {
         const processedBuffer = await processImage(beforeFile);
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-        const uploadPath = path.join(__dirname, '..', '..', 'uploads', filename);
+        const uploadPath = path.join('/app/uploads', filename);
         await fs.promises.writeFile(uploadPath, processedBuffer);
         updateData.imgBeforeWorkPath = `uploads/${filename}`;
       }
       if (afterFile) {
         const processedBuffer = await processImage(afterFile);
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-        const uploadPath = path.join(__dirname, '..', '..', 'uploads', filename);
+        const uploadPath = path.join('/app/uploads', filename);
         await fs.promises.writeFile(uploadPath, processedBuffer);
         updateData.imgAfterWorkPath = `uploads/${filename}`;
       }
@@ -137,7 +137,8 @@ export class SpotHoleController {
     if(imgBeforeWork){
       const processedBuffer = await processImage(imgBeforeWork);
       const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-      const uploadPath = path.join(__dirname, '..', '..', 'uploads', filename);
+      const uploadPath = path.join('/app/uploads', filename);
+      console.log("Salvando imagem no:", uploadPath);
       await fs.promises.writeFile(uploadPath, processedBuffer);
       imgBeforeWorkPath = `uploads/${filename}`;
     }
