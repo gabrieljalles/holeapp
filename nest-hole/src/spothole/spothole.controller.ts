@@ -135,7 +135,8 @@ export class SpotHoleController {
     if(imgBeforeWork){
       const processedBuffer = await processImage(imgBeforeWork);
       const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-      await fs.promises.writeFile(`./uploads/${filename}`, processedBuffer);
+      const uploadPath = path.join(__dirname, '..', '..', 'uploads', filename);
+      await fs.promises.writeFile(uploadPath, processedBuffer);
       imgBeforeWorkPath = `uploads/${filename}`;
     }
 
