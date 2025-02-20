@@ -12,7 +12,7 @@ import { env } from 'process';
   imports: [
     ServeStaticModule.forRoot({
       //Para local, alterar o rootPath para "join(__dirname, '..', '..', 'uploads')"
-      rootPath: "/app/uplaods",
+      rootPath: "/app/uploads",
       serveRoot: '/spothole/uploads',
     }),
     ConfigModule.forRoot({ isGlobal: true }),
