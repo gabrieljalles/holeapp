@@ -6,6 +6,7 @@ next :npm run dev
 # Verificar o .ENV (backend):
 
 NEXT_PUBLIC_API_URL=
+* //Para local, alterar o rootPath para "join(__dirname, '..', '..', 'uploads')"
 
 # Verificar o .ENV (frontend):
 
