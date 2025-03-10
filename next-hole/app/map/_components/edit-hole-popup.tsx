@@ -32,9 +32,10 @@ interface EditHolePopupProps {
   onRefresh: () => void;
   data: Spot;
   onEditHole: (formData: FormData) => Promise<void>;
+  isLoading: boolean;
 }
 
-const EditHolePopup = ({ data, onClose, onRefresh, onEditHole}: EditHolePopupProps) => {
+const EditHolePopup = ({ data, onClose, onRefresh, onEditHole, isLoading}: EditHolePopupProps) => {
   const [status, setStatus] = useState(data.status || "Sem status");
   const [numero, setNumero] = useState(data.number);
   const [bairro, setBairro] = useState(data.district || "Sem bairro");
@@ -233,14 +234,23 @@ const EditHolePopup = ({ data, onClose, onRefresh, onEditHole}: EditHolePopupPro
             variant="ghost"
             onClick={handleCancel}
             className="flex-grow flex-2 px-4 py-2 border  font-semibold rounded"
+            disabled={isLoading}
           >
             Cancelar
           </Button>
           <Button
+            disabled={isLoading}
             onClick={handleSave}
             className="flex-grow-0 basis-1/3 px-4 py-2 hover:bg-successful shadow-lg text-white font-bold rounded"
           >
-            Salvar
+            {isLoading ? (
+              <div className="flex items-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                Salvando...
+              </div>
+            ) : (
+              "Salvar"
+            )}
           </Button>
         </div>
       </div>

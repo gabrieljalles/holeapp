@@ -21,6 +21,8 @@ import { toast } from "@/hooks/use-toast";
 import DeleteHoleAlert from "./delete-hole-alert";
 import axios from "axios";
 import EditHolePopup from "./edit-hole-popup";
+import { FaLaptopCode, FaUserTie } from "react-icons/fa";
+import { GiHole } from "react-icons/gi";
 
 interface ShowHolePopupProps {
   data: Spot;
@@ -59,6 +61,7 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isEditHoleOpen, setIsEditHoleOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     isShowPopupOpen(true);
@@ -73,6 +76,7 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
     const id = data.id;
 
     try{
+      setIsLoading(true);
       const response = await axios.delete(`/api/spothole`, {
         params: { id },
       });
@@ -98,12 +102,13 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
       alert("Erro ao deletar o buraco!")
     }finally{
       setIsAlertOpen(false);
+      setIsLoading(false);
     }
   }
 
   const handleEditHole = async (formData: FormData) => {
     try {
-
+      setIsLoading(true);
       const response = await axios.put(`/api/spothole?id=${data.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -127,6 +132,8 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
     } catch (error) {
       console.error("Erro ao editar o buraco:", error);
       alert("Erro ao editar o buraco");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -170,6 +177,7 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
             isOpen = {isAlertOpen}
             onClose = {() => setIsAlertOpen(false)}
             onConfirm = {handleDeleteHole}
+            isLoading = {isLoading}
            />
           <Button
             onClick={handleOpenGMaps}
@@ -268,9 +276,6 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
               </div>
             )}
           </div>
-
-          
-
           <div className="w-full">
             <p className="font-bold flex gap-1">
               <NotebookPen size={16} />
@@ -278,8 +283,32 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
             </p>
             <p>{data.observation}</p>
           </div>
-
-          
+          <div className="w-full flex flex-wrap gap-1">
+            {data.vereador ?(
+              <Badge
+              className=" bg-gray-600 flex-shrink-0 rounded-sm gap-1"
+              >
+                <FaUserTie size={16} />
+                Pedido de verador
+              </Badge>
+            ): ""}
+            {data.bigHole ?(
+              <Badge
+              className=" bg-gray-700 flex-shrink-0 rounded-sm gap-1"
+              >
+                <GiHole size={16} />
+                Buraco grande
+              </Badge>
+            ): ""}
+            {data.simSystem ?(
+              <Badge
+              className="bg-gray-800 flex-shrink-0 rounded-sm gap-1"
+              >
+                <FaLaptopCode size={16} />
+                SistemaSym
+              </Badge>
+            ): ""}
+          </div>
           <div className="w-full flex justify-center">
             <Button
               onClick={handleOpenEditHole}
@@ -292,7 +321,8 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
             {isEditHoleOpen && (
               <EditHolePopup 
               data={data} 
-              onRefresh={onRefresh} 
+              onRefresh={onRefresh}
+              isLoading={isLoading}
               onEditHole={handleEditHole}
               onClose={handleCloseEditHole}/> 
             )}

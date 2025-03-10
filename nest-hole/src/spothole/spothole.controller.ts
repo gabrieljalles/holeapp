@@ -16,9 +16,15 @@ import {FileFieldsInterceptor, FileInterceptor} from '@nestjs/platform-express';
 import { multerOptions } from 'src/shared/multer.config';
 import { SpotHoleService } from './spothole.service';
 import { CreateSpotHoleDto } from './dto/create-spothole.dto';
-import path, { join } from 'path';
+import path from 'path';
 import * as fs from 'fs';
 import { processImage } from 'src/utils/image-processor.service';
+
+//Define o lugar onde irá salvar as IMGS
+const baseUploadPath = 
+process.env.NODE_ENV === 'development'
+? path.join(__dirname, '..', '..', 'uploads')
+: '/app/uploads';
 
 @Controller('spothole')
 export class SpotHoleController {
@@ -94,14 +100,14 @@ export class SpotHoleController {
       if (beforeFile) {
         const processedBuffer = await processImage(beforeFile);
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-        const uploadPath = path.join('/app/uploads', filename);
+        const uploadPath = path.join(baseUploadPath, filename);
         await fs.promises.writeFile(uploadPath, processedBuffer);
         updateData.imgBeforeWorkPath = `uploads/${filename}`;
       }
       if (afterFile) {
         const processedBuffer = await processImage(afterFile);
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-        const uploadPath = path.join('/app/uploads', filename);
+        const uploadPath = path.join(baseUploadPath, filename);
         await fs.promises.writeFile(uploadPath, processedBuffer);
         updateData.imgAfterWorkPath = `uploads/${filename}`;
       }
@@ -131,13 +137,13 @@ export class SpotHoleController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
+
     let imgBeforeWorkPath: string | null = null;
 
     if(imgBeforeWork){
       const processedBuffer = await processImage(imgBeforeWork);
       const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-      const uploadPath = path.join('/app/uploads', filename);
+      const uploadPath = path.join(baseUploadPath, filename);
       console.log("Salvando imagem no:", uploadPath);
       await fs.promises.writeFile(uploadPath, processedBuffer);
       imgBeforeWorkPath = `uploads/${filename}`;

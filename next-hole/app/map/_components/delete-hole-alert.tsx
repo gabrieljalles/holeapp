@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface DeleteHoleAlertProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading: boolean;
 }
 
-const DeleteHoleAlert = ({isOpen, onClose, onConfirm}:DeleteHoleAlertProps) => {
+const DeleteHoleAlert = ({isOpen, onClose, onConfirm, isLoading}:DeleteHoleAlertProps) => {
   if(!isOpen) return null;
 
   return (
@@ -19,12 +20,21 @@ const DeleteHoleAlert = ({isOpen, onClose, onConfirm}:DeleteHoleAlertProps) => {
           <button
             className="bg-red-500 text-white px-4 py-2 rounded mr-2"
             onClick={onConfirm}
+            disabled={isLoading}
           >
-            Sim, excluir
+            {isLoading ? (
+              <div className="flex items-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 mr-2"></div>
+                Excluindo...
+              </div>
+            ) : (
+              "Sim, excluir"
+            )}
           </button>
           <button
             className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
             onClick={onClose}
+            disabled={isLoading}
           >
             Cancelar
           </button>

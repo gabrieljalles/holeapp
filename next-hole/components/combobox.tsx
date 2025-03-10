@@ -45,12 +45,12 @@ const Combobox = ({statusList, selectedValue, onChange }: ComboboxProps) => {
 
         {/* Dropdown */}
         {isOpen && (
-            <div className="absolute mt-2 w-full  rounded-md z-10">
+            <div className="absolute mt-2 w-full border border-black  rounded-md z-10">
             <ul className="max-h-60 overflow-hidden bg-white rounded-md border text-sm">
                 {filteredStatusList.map((item) => (
                 <li
                     key={item.value}
-                    className={`cursor-pointer px-4 py-2 border-b-1 hover:bg-gray-500 hover:text-white`}
+                    className={`cursor-pointer px-4 py-2 border-b-1 hover:bg-black hover:text-white`}
                     onClick={() => handleSelect(item.value)}
                 >
                     {item.label}

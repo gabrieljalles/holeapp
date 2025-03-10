@@ -6,16 +6,17 @@ import { SpotHoleModule } from './spothole/spothole.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { env } from 'process';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
-      //Para local, alterar o rootPath para "join(__dirname, '..', '..', 'uploads')"
-      rootPath: "/app/uploads",
+      rootPath: 
+        process.env.NODE_ENV === 'development'
+        ? join(__dirname, '..', 'uploads')
+        : '/app/uploads',
       serveRoot: '/spothole/uploads',
     }),
-    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     SpotHoleModule,
   ],
