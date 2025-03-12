@@ -12,12 +12,6 @@ import { useMapContext } from './MapContext';
 
 import ChangeView from "../_functions/change-view";
 
-const userIcon = new L.Icon({
-  iconUrl: "https://utfs.io/f/tHigeRwX8lT22IEBsX0EmJpcSR49A5YXWy7w3iFqjvf0oDlQ",
-  iconSize: [28, 28],
-  iconAnchor: [14, 14],
-});
-
 const addressIcon = new L.Icon({
   iconUrl: "https://utfs.io/f/tHigeRwX8lT2BmQgEFYokrWdDe1jQSFpZtMJ90cVnwqRHNTf",
   iconSize: [28, 28],
@@ -92,6 +86,7 @@ const RealtimeLocation = ({
   const [userPosition, setUserPosition] = useState<[number, number] | null>(
     null
   );
+  const [userDirection, setUserDirection] = useState<number>(0);
   const [addressPosition, setAddressPosition] = useState<[number, number]|null >(null)
   const [address, setAddress] = useState("");
   const [clickedPosition, setClickedPosition] = useState<[number, number] | null>(
@@ -121,6 +116,17 @@ const RealtimeLocation = ({
   }
  
   useEffect(() => {
+
+    //Direção que o usuário está olhando
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      if (event.absolute || event.alpha !== null){
+        const alpha = event.alpha ?? 0;
+        setUserDirection(alpha);
+      }
+    }
+
+    window.addEventListener("deviceorientation", handleOrientation, true);
+
     if (!navigator.geolocation || typeof window === "undefined") {
       console.error("Geolocation is not supported by your browser");
       return;
@@ -139,6 +145,7 @@ const RealtimeLocation = ({
 
     return () => {
       navigator.geolocation.clearWatch(watchId); // Limpa o watcher ao desmontar
+      window.removeEventListener("deviceorientation", handleOrientation); // Remove o orientador ao desmontar
     };
   }, []);
 
@@ -185,7 +192,17 @@ const RealtimeLocation = ({
       />}
 
       {addressPosition && <Marker position={addressPosition}  icon={addressIcon}/>}
-      {userPosition && <Marker position={userPosition} icon={userIcon} />}
+      {userPosition && <Marker position={userPosition} icon={L.divIcon({
+        html: `
+        <div style="transform: rotate(${userDirection}deg); transition: transform 0.2s ease;">
+          <img src="https://utfs.io/f/tHigeRwX8lT2BmQgEFYokrWdDe1jQSFpZtMJ90cVnwqRHNTf" style="width: 28px; height: 28px; transform: rotate(180deg)" />
+        </div>
+      `,
+      className: '',
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    })}
+       />}
       {clickedPosition && <Marker position={clickedPosition} icon={holeIcon} />}
 
       {data.map((spot: Spot) => {

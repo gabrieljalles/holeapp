@@ -9,7 +9,7 @@ const FixedMapDropdownAction = () => {
     const handleClick = () => {
         const newState = !followUser;
         setFollowUser(newState);
-        setZoomPosition(zoomPosition === 13 ? 19 : 13)
+        setZoomPosition(zoomPosition === 13 ? 18.5 : 13)
 
         if(newState){
             setIsMarking(true);
