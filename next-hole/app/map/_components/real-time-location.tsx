@@ -195,7 +195,7 @@ const RealtimeLocation = ({
       {userPosition && <Marker position={userPosition} icon={L.divIcon({
         html: `
         <div style="transform: rotate(${userDirection}deg); transition: transform 0.2s ease;">
-          <img src="https://utfs.io/f/tHigeRwX8lT2BmQgEFYokrWdDe1jQSFpZtMJ90cVnwqRHNTf" style="width: 28px; height: 28px; transform: rotate(180deg)" />
+          <img src="https://utfs.io/f/tHigeRwX8lT2BmQgEFYokrWdDe1jQSFpZtMJ90cVnwqRHNTf" style="width: 28px; height: 28px;" />
         </div>
       `,
       className: '',
