@@ -74,17 +74,22 @@ export class SpotHoleRepository {
 
   //Agrupa os buracos numa grade (lat/lng arredondados) para visões de zoom afastado
   async findClustered(bbox: SpotHoleBbox, precision: number) {
+    // Dois problemas nessa query: 1) o Prisma manda `precision` como bigint pro Postgres,
+    // e ROUND(numeric, bigint) não existe (só ROUND(numeric, integer)) — daí o cast ::int.
+    // 2) repetir ${precision} no GROUP BY cria um parâmetro $N diferente a cada ocorrência,
+    // e o Postgres não reconhece como a mesma expressão do SELECT — por isso agrupamos
+    // pela posição da coluna (1, 2) em vez de repetir a expressão.
     return this.prisma.$queryRaw<SpotHoleCluster[]>`
       SELECT
-        ROUND(lat::numeric, ${precision})::float AS lat,
-        ROUND(lng::numeric, ${precision})::float AS lng,
+        ROUND(lat::numeric, ${precision}::int)::float AS lat,
+        ROUND(lng::numeric, ${precision}::int)::float AS lng,
         COUNT(*)::int AS count,
         MODE() WITHIN GROUP (ORDER BY status) AS status
       FROM "SpotHole"
       WHERE lat BETWEEN ${bbox.minLat} AND ${bbox.maxLat}
         AND lng BETWEEN ${bbox.minLng} AND ${bbox.maxLng}
         AND (status != ${FIXED_STATUS} OR "fixedAt" IS NULL OR "fixedAt" >= ${retentionCutoff()})
-      GROUP BY ROUND(lat::numeric, ${precision}), ROUND(lng::numeric, ${precision})
+      GROUP BY 1, 2
     `;
   }
 

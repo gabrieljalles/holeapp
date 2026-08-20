@@ -173,23 +173,21 @@ const MonthlyTrendChart = ({ data }: { data: MonthlyTrendPoint[] }) => {
   );
 };
 
-// Card com um número grande e um rótulo — bloco básico dos indicadores do dashboard.
+// Card compacto com ícone monocromático — bloco básico dos indicadores do dashboard.
 const KpiCard = ({
   icon,
   label,
   value,
-  accent,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
-  accent: string;
 }) => (
-  <div className="flex items-center gap-3 rounded-lg border bg-white p-4 shadow-sm">
-    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${accent}`}>{icon}</div>
-    <div>
-      <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-xl font-bold">{value}</p>
+  <div className="flex items-center gap-2.5 rounded-lg border bg-white px-3 py-2.5">
+    <div className="shrink-0 text-gray-400">{icon}</div>
+    <div className="min-w-0">
+      <p className="truncate text-[11px] leading-tight text-gray-500">{label}</p>
+      <p className="text-base font-semibold leading-tight">{value}</p>
     </div>
   </div>
 );
@@ -247,78 +245,67 @@ const DashboardTab = () => {
 
       <div>
         <h2 className="mb-3 text-sm font-semibold text-gray-700">Buracos</h2>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
           <KpiCard
-            icon={<MapPin size={18} className="text-white" />}
+            icon={<MapPin size={16} />}
             label="Total de buracos"
             value={String(spotHoleStats.totalCount)}
-            accent="bg-gray-500"
           />
           <KpiCard
-            icon={<AlertTriangle size={18} className="text-white" />}
+            icon={<AlertTriangle size={16} />}
             label="Abertos"
             value={String(statusCount(spotHoleStats.byStatus, "Aberto"))}
-            accent="bg-red-500"
           />
           <KpiCard
-            icon={<Wrench size={18} className="text-white" />}
+            icon={<Wrench size={16} />}
             label="Em manutenção"
             value={String(statusCount(spotHoleStats.byStatus, "Manutenção"))}
-            accent="bg-amber-500"
           />
           <KpiCard
-            icon={<CheckCircle2 size={18} className="text-white" />}
+            icon={<CheckCircle2 size={16} />}
             label="Reparados"
             value={String(statusCount(spotHoleStats.byStatus, "Reparado"))}
-            accent="bg-green-500"
           />
           <KpiCard
-            icon={<Clock size={18} className="text-white" />}
+            icon={<Clock size={16} />}
             label="Tempo médio de reparo"
             value={spotHoleStats.avgFixTimeDays !== null ? `${spotHoleStats.avgFixTimeDays.toFixed(1)} dias` : "—"}
-            accent="bg-blue-500"
           />
           <KpiCard
-            icon={<AlertTriangle size={18} className="text-white" />}
+            icon={<AlertTriangle size={16} />}
             label="Buracos grandes pendentes"
             value={String(spotHoleStats.bigHolePending)}
-            accent="bg-purple-500"
           />
           <KpiCard
-            icon={<Megaphone size={18} className="text-white" />}
+            icon={<Megaphone size={16} />}
             label="Buracos de vereadores pendentes"
             value={String(spotHoleStats.vereadorPending)}
-            accent="bg-amber-600"
           />
         </div>
       </div>
 
       <div>
         <h2 className="mb-3 text-sm font-semibold text-gray-700">Zonas de trabalho</h2>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
           <KpiCard
-            icon={<MapPin size={18} className="text-white" />}
+            icon={<MapPin size={16} />}
             label="Total de zonas"
             value={String(workZoneStats.total)}
-            accent="bg-gray-500"
           />
           <KpiCard
-            icon={<CheckCircle2 size={18} className="text-white" />}
+            icon={<CheckCircle2 size={16} />}
             label="Concluídas"
             value={String(workZoneStats.completed)}
-            accent="bg-green-500"
           />
           <KpiCard
-            icon={<Clock size={18} className="text-white" />}
+            icon={<Clock size={16} />}
             label="Em andamento"
             value={String(workZoneStats.inProgress)}
-            accent="bg-blue-500"
           />
           <KpiCard
-            icon={<AlertTriangle size={18} className="text-white" />}
+            icon={<AlertTriangle size={16} />}
             label="Atrasadas"
             value={String(workZoneStats.overdue)}
-            accent="bg-red-500"
           />
         </div>
         <div className="mt-3 rounded-lg border bg-white p-4 shadow-sm">
