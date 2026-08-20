@@ -1,0 +1,120 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  VIEWER
+  ADDER
+  REPAIRER
+  ADMIN
+}
+
+model SpotHole{
+  id String @id @default(uuid())
+  priority String?
+  size String?
+  trafficIntensity String?
+  status String
+  createdByUserId String?
+  createdByUser User? @relation("SpotHoleCreatedBy", fields: [createdByUserId], references: [id])
+  fixedByUserId String?
+  fixedByUser User? @relation("SpotHoleFixedBy", fields: [fixedByUserId], references: [id])
+  bigHole Boolean
+  vereador Boolean
+  simSystem Boolean
+  lat Float
+  lng Float
+  zone String?
+  district String?
+  workZoneId String?
+  workZone WorkZone? @relation(fields: [workZoneId], references: [id])
+  cep String?
+  address String?
+  number String?
+  observation String?
+  fixedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imgBeforeWorkPath String?
+  imgAfterWorkPath String?
+
+  // Preenchidos só quando o buraco é fechado via "forçar conclusão de zona",
+  // para permitir reverter exatamente (e só) o que essa ação mudou.
+  forceClosedByZone Boolean @default(false)
+  statusBeforeForceClose String?
+
+  @@index([lat, lng])
+  @@index([workZoneId])
+}
+
+model User{
+  id String @id @default(uuid())
+  matricula String @unique
+  email String? @unique
+  password String
+  fullName String
+  role Role @default(VIEWER)
+  createdAt DateTime @default(now())
+  updetedAt DateTime @updatedAt
+  imgUserPath String?
+
+  // Quem criou esta conta (via painel de admin) — nulo para auto-cadastro
+  // ou para contas que já existiam antes deste campo.
+  createdByUserId String?
+  createdByUser User? @relation("UserCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  createdUsers User[] @relation("UserCreatedBy")
+
+  // Posição mais recente reportada pelo cliente (a cada 1 min), para o admin ver
+  // colaboradores online no mapa. Sem histórico — só o último ping.
+  lastLat Float?
+  lastLng Float?
+  lastSeenAt DateTime?
+
+  createdSpotHoles SpotHole[] @relation("SpotHoleCreatedBy")
+  fixedSpotHoles SpotHole[] @relation("SpotHoleFixedBy")
+  completedZones WorkZone[] @relation("ZoneCompletedBy")
+  zoneAssignments WorkZoneAssignment[]
+
+  @@index([lastSeenAt])
+}
+
+model WorkZoneAssignment {
+  id String @id @default(uuid())
+  workZoneId String
+  userId String
+  workZone WorkZone @relation(fields: [workZoneId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([workZoneId, userId])
+}
+
+model WorkZone {
+  id String @id @default(uuid())
+  name String
+  createdAt DateTime @default(now())
+
+  // Pontos [lat, lng] do polígono desenhado ao selecionar os buracos da zona —
+  // só pra exibição (miniatura na lista, área no mapa principal); nulo se a zona
+  // nunca teve um polígono desenhado (buracos escolhidos um a um).
+  polygon Json?
+
+  // Data planejada de início dos trabalhos (informativo, não bloqueia ações).
+  scheduledStartAt DateTime?
+
+  // Zona é "concluída" quando completedAt != null — automaticamente (todos os
+  // buracos reparados) ou forçada por um admin (forcedCompletion = true).
+  completedAt DateTime?
+  forcedCompletion Boolean @default(false)
+  completedByUserId String?
+  completedByUser User? @relation("ZoneCompletedBy", fields: [completedByUserId], references: [id])
+
+  spotHoles SpotHole[]
+  assignedUsers WorkZoneAssignment[]
+}
