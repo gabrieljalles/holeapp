@@ -289,7 +289,7 @@ const ShowHolePopup = ({setSelectedSpotId, data, onClose, isShowPopupOpen, onRef
               className=" bg-gray-600 flex-shrink-0 rounded-sm gap-1"
               >
                 <FaUserTie size={16} />
-                Pedido de verador
+                Pedido de vereador
               </Badge>
             ): ""}
             {data.bigHole ?(

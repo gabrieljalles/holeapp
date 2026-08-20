@@ -99,7 +99,7 @@ const AddHolePopup = ({ isVisible, onClose, onSubmit }: AddHolePopupProps) => {
               className=" mr-2 flex gap-1 items-center text-sm font-medium"
             >
               <FaUserTie size={16} />
-              Pedido de verador
+              Pedido de vereador
             </Label>
           
           </div>
