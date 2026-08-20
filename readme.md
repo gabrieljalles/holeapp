@@ -8,6 +8,9 @@ Comecei esse projeto como um piloto bem simples (só marcar, editar e apagar um 
 
 **No mapa principal**, qualquer usuário consegue ver os buracos cadastrados na cidade, coloridos por status (aberto, em manutenção, reparado). Buracos grandes e buracos "de vereador" (uma marcação específica que o cliente pediu pra dar prioridade política) aparecem destacados visualmente. Dá pra buscar um endereço, seguir a própria localização em tempo real, e — dependendo do papel do usuário — adicionar um buraco novo tirando uma foto na hora (o app já abre a câmera direto, sem precisar ir na galeria).
 
+![Mapa principal com os buracos de Uberlândia](.github/images/mapa.jpg)
+Esse é o mapa que todo usuário vê ao entrar no app. A cor de cada marcador segue o status (vermelho aberto, laranja em manutenção, verde reparado), com borda preta mais grossa nos que têm prioridade política. Com esse zoom mais afastado, buracos próximos se agrupam num cluster com o número dentro — é só ir aproximando que ele se abre nos pontos individuais. A seta azul é a localização do usuário em tempo real, e no canto de baixo tem os controles de zoom, seguir localização e o filtro de zona.
+
 **Reparadores** marcam um buraco como "em manutenção" ou "reparado", anexando foto do resultado. Quando uma zona de trabalho tem prazo vencido e ainda não foi concluída, o reparador recebe um aviso assim que abre o app.
 
 **Zonas de trabalho** são áreas desenhadas no mapa (um polígono) que agrupam vários buracos de uma região e são atribuídas a um ou mais reparadores, com prazo de início. Dá pra forçar a conclusão de uma zona inteira de uma vez (todo mundo lá dentro vira "reparado" automaticamente) ou reabrir se foi engano. Na lista de zonas, cada uma mostra uma miniatura do formato da área, quantos buracos tem, e muda de cor conforme o status: cinza pra quem ainda não começou, vermelha pra quem já devia ter começado, verde pra concluída.
